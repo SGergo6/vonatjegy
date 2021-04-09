@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="0.25" y="216.0">station.StationManager</node>
+    <node x="0.0" y="0.0">station.Station</node>
+    <node x="193.99999999999997" y="33.5">station.StationNotFoundException</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="station.StationManager" target="station.StationNotFoundException">
+      <point x="86.80000000000001" y="-93.5" />
+      <point x="195.55" y="191.0" />
+      <point x="314.0" y="191.0" />
+      <point x="0.0" y="49.5" />
+    </edge>
+    <edge source="station.StationManager" target="station.Station">
+      <point x="-1.4210854715202004E-14" y="-93.5" />
+      <point x="21.75" y="83.0" />
+    </edge>
+    <edge source="station.Station" target="station.StationManager">
+      <point x="65.25" y="83.0" />
+      <point x="43.39999999999998" y="-93.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="217.0" y="201.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

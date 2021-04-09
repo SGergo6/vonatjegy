@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="0.0" y="393.0">train.Train</node>
+    <node x="309.0" y="0.0">ticket.TicketManager</node>
+    <node x="88.0" y="587.0">train.Wagon</node>
+    <node x="0.0" y="879.0">station.StationManager</node>
+    <node x="262.0" y="879.0">station.Station</node>
+    <node x="9.0" y="0.0">train.Line</node>
+    <node x="644.0" y="0.0">ticket.Ticket</node>
+    <node x="56.0" y="667.0">train.Seat</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="train.Train" target="train.Line">
+      <point x="0.0" y="-72.0" />
+      <point x="0.0" y="171.5" />
+    </edge>
+    <edge source="train.Seat" target="train.Wagon">
+      <point x="0.0" y="-83.5" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="train.Wagon" target="train.Train">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="72.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="569.0" y="259.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
