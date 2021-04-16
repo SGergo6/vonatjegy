@@ -24,7 +24,7 @@ public class Main {
         Station[] route = new Station[]{StationManager.searchStation("keleti"), StationManager.searchStation("déli")};
 
         Line line = new Line(route, "S70", 100);
-        line.newTrain(5);
+        //line.newTrain(5);
 
 
     }

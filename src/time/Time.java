@@ -113,13 +113,7 @@ public class Time {
     public int compareTo(Time t){
         int kulonb = this.getMinsOnly() - t.getMinsOnly();
         //return Integer.compare(kulonb, 0);
-        if(kulonb == 0)
-            return 0;
-        else if(kulonb > 0)
-            return 1;
-        else{
-            return -1;
-        }
+        return Integer.compare(kulonb, 0);
     }
 
     public String toString() {
@@ -147,6 +141,6 @@ public class Time {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Time time = (Time) o;
-        return min == time.min;
+        return this.min == time.min;
     }
 }

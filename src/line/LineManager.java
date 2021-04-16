@@ -41,7 +41,7 @@ public abstract class LineManager {
      */
     public static Line searchLine(String name) throws LineNotFoundException{
         for (Line line : lines) {
-            if (line.getName().equals(name)) {
+            if (line.getName().equalsIgnoreCase(name)) {
                 return line;
             }
         }

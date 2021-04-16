@@ -1,6 +1,7 @@
 package line.vehicle;
 
 import line.LineManager;
+import line.Timetable;
 import time.Time;
 
 /**
@@ -18,35 +19,45 @@ public abstract class Vehicle {
     protected Time[] stationArrivals;
     private final int ID;
 
-    /** A vonat a vonal tömb útvonalán halad */
-    public static final boolean DIRECTION_NORMAL = false;
-    /** A vonat <b>fordítva</b> halad a vonal tömb útvonalán */
-    public static final boolean DIRECTION_REVERSED = false;
-
     protected Vehicle(){
         ID = LineManager.nextID();
     }
 
     /**
      * Beállítja a vonat menetrendjét.
-     * @param direction a vonat iránya.<br>Megadása: {@code Vehicle.DIRECTION_NORMAL/REVERSED}
-     * @param stationArrivals Érkezési idő az állomásokra.<br>Az állomás időket mindig
+     * @param direction a vonat iránya.<br>Megadása: {@code Timetable.DIRECTION_NORMAL/REVERSED}
+     * @param timetable Érkezési idő az állomásokra.<br>Az állomás időket mindig
      *                        a vonal eredeti sorrendje szerint kell megadni!
      */
-    public void setTimetable(boolean direction, Time[] stationArrivals){
+    public void setTimetable(boolean direction, Timetable timetable){
         lineReversed = direction;
-        setStationArrivals(stationArrivals);
+        setStationArrivals(timetable);
     }
 
     public int getID() {
         return ID;
     }
+
+    /**
+     * Visszaadja a vonat menetrendjét.
+     * @return a vonat menetrendje
+     */
     public Time[] getStationArrivals() {
         return stationArrivals;
     }
+
+    /**
+     * @return {@code false}: a vonat a vonal irányában halad.<br>
+     * {@code true}: a vonat a vonal útvonalán fordítvam visszafelé halad.
+     */
     public boolean isLineReversed() {
         return lineReversed;
     }
+
+    /**
+     * Átállítja a vonat haladási irányát.
+     * @param lineReversed Timetable.DIRECTION_NORMAL/REVERSED.
+     */
     public void setLineReversed(boolean lineReversed) {
         this.lineReversed = lineReversed;
     }
@@ -60,6 +71,16 @@ public abstract class Vehicle {
      */
     public void setStationArrivals(Time[] stationArrivals) {
         this.stationArrivals = stationArrivals;
+    }
+
+    /**
+     * Beállítja a menetrendet.<br>
+     * Ha a vonat a vonal másik irányába halad, azt a {@code lineReversed} változóban
+     * kell jelezni.
+     * @param timetable a beállítandó menetrend.
+     */
+    public void setStationArrivals(Timetable timetable) {
+        this.stationArrivals = timetable.getArrivals();
     }
 
 }

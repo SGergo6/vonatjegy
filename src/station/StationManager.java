@@ -41,10 +41,25 @@ public abstract class StationManager {
      * ha megegyezik a neve egy már létező állomással. Nem nagybetű érzékeny.<br>
      * Ha egy állomás már létezik a listában, nem történik semmi.
      * @param stationName az új állomás neve
+     * @return {@code true} ha sikerült hozzáadni<br>
+     * {@code false}, ha már szerepelt a listában.
      */
-    public static void newStation(String stationName){
+    public static boolean newStation(String stationName){
         Station s = new Station(stationName);
-        stations.add(s);
+        return stations.add(s);
+    }
+
+    /**
+     * Hozzáad egy új állomást a {@code HashSet}-hez.<br>
+     * Egy állomás duplikációnak számít akkor,
+     * ha megegyezik a neve egy már létező állomással. Nem nagybetű érzékeny.<br>
+     * Ha egy állomás már létezik a listában, nem történik semmi.
+     * @param station az hozzáadandó állomás
+     * @return {@code true} ha sikerült hozzáadni<br>
+     * {@code false}, ha már szerepelt a listában.
+     */
+    public static boolean newStation(Station station){
+        return stations.add(station);
     }
 
     /**

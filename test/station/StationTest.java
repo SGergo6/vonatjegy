@@ -23,6 +23,16 @@ public class StationTest {
         StationManager.newStation("nyugati");
         assertEquals(2, StationManager.getStations().size(),
                 "Hozzáadva újra egy ugyanolyan nevű állomás, kisbetűkkel, a mérete még mindig 2 kell legyen");
+
+        Station keleti = new Station("Keleti");
+        Station nyugati = new Station("nyugati");
+
+        StationManager.newStation(keleti);
+        assertEquals(2, StationManager.getStations().size(),
+                "Hozzáadva egy ugyanolyan nevű állomás osztályból, a mérete még mindig 2 kell legyen");
+        StationManager.newStation(nyugati);
+        assertEquals(2, StationManager.getStations().size(),
+                "Hozzáadva egy ugyanolyan nevű állomás osztályból, kisbetűkkel, a mérete még mindig 2 kell legyen");
     }
 
     @Test

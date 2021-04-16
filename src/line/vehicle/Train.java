@@ -67,4 +67,23 @@ public class Train extends Vehicle{
         return stationArrivals[stationIndex];
     }
 
+    /**
+     * Beállítja 1 kocsi méretét a megadott méretűre.
+     * @param index a beállítandó kocsi sorszáma
+     * @param seatCount a kocsiban lévő ülések száma.
+     */
+    public void setWagon(int index, int seatCount){
+        wagons[index] = new Wagon(seatCount);
+    }
+
+    /**
+     * Beállítja a vonat összes kocsijának méretét a megadott méretűre.
+     * @param seatCount ülések száma 1 kocsiban
+     */
+    public void setAllWagon(int seatCount){
+        for (int i = 0; i < wagons.length; i++) {
+            this.setWagon(i, seatCount);
+        }
+    }
+
 }

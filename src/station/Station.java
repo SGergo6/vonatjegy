@@ -16,7 +16,7 @@ public class Station {
      * Inicializálja az állomást.
      * @param name az állomás neve
      */
-    Station(String name) {
+    public Station(String name) {
         this.name = name;
         stationID = StationManager.nextStationID();
     }
