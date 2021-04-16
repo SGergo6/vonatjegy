@@ -1,17 +1,17 @@
 package line;
 
 import line.vehicle.Train;
+import line.vehicle.Vehicle;
 import station.Station;
 import time.Time;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Line {
     private final Station[] route;
     private final String name;
     private int price;
-    private HashSet<Train> trains;
+    private HashSet<Vehicle> trains;
 
 
     /**
@@ -39,7 +39,14 @@ public class Line {
         train.setAllWagon(seatPerWagon);
         train.setTimetable(direction, timetable);
         trains.add(train);
+    }
 
+    /**
+     * Hozzáad egy új járművet a vonalhoz.
+     * @param vehicle valamilyen jármű osztály leszármazott.
+     */
+    public void newVehicle(Vehicle vehicle){
+        trains.add(vehicle);
     }
 
     /**
@@ -48,10 +55,26 @@ public class Line {
      * @return a megtalált vonat osztálya
      * @throws TrainNotFoundException ha nem indul vonat a megadott időben
      */
-    public Train findTrain(Time departure) throws TrainNotFoundException {
-        for(Train train : trains){
-            if(train.getDepartureTime().equals(departure)){
-                return train;
+    public Vehicle findVehicle(Time departure) throws TrainNotFoundException {
+        for(Vehicle vehicle : trains){
+            if(vehicle.getDepartureTime().equals(departure)){
+                return vehicle;
+            }
+        }
+        throw new TrainNotFoundException();
+    }
+
+    /**
+     * Megkeres egy vonatot az indulási ideje alapján
+     * @param departure indulási idő a vonat 1. állomásáról
+     * @return a megtalált vonat osztálya
+     * @throws TrainNotFoundException ha nem indul vonat a megadott időben
+     */
+    public Vehicle findVehicle(String departure) throws TrainNotFoundException {
+        Time departureTime = new Time(departure);
+        for(Vehicle vehicle : trains){
+            if(vehicle.getDepartureTime().equals(departureTime)){
+                return vehicle;
             }
         }
         throw new TrainNotFoundException();
@@ -63,28 +86,28 @@ public class Line {
      * @param interval időtartomány (+/-), percben megadva
      * @return a megtalált vonat osztálya
      */
-    public Train[] findTrains(Time departure, int interval) throws TrainNotFoundException {
-        ArrayList<Train> found = new ArrayList<>();
-        for(Train train : trains){
-            if(train.getDepartureTime().interval(departure.subMins(interval), departure.addMins(interval))){
-                found.add(train);
+    public Vehicle[] findVehicles(Time departure, int interval) throws TrainNotFoundException {
+        ArrayList<Vehicle> found = new ArrayList<>();
+        for(Vehicle vehicle : trains){
+            if(vehicle.getDepartureTime().interval(departure.subMins(interval), departure.addMins(interval))){
+                found.add(vehicle);
             }
         }
-        return (Train[]) found.toArray();
+        return (Vehicle[]) found.toArray();
     }
 
 
     /**
      * Visszaad egy menetrend osztályt, amit ebből a vonalból és a megadott vonatból állít össze.
-     * @param train A vonat, aminek a menetrendje kell
+     * @param vehicle A vonat, aminek a menetrendje kell
      * @return menetrend osztály, állomásokkal és időkkel összerendelve.
      */
-    public Timetable getTimetable(Train train){
-        if(train.getStationArrivals().length != route.length){
+    public Timetable getTimetable(Vehicle vehicle){
+        if(vehicle.getStationArrivals().length != route.length){
             throw new IllegalArgumentException("Ez a vonat nem ezen a vonalon közlekedik!");
         }
         Timetable t = new Timetable(this);
-        t.setArrival(train.getStationArrivals());
+        t.setArrival(vehicle.getStationArrivals());
         return t;
     }
 
@@ -97,7 +120,7 @@ public class Line {
     public int getPrice() {
         return price;
     }
-    public HashSet<Train> getTrains() {
+    public HashSet<Vehicle> getTrains() {
         return new HashSet<>(Collections.unmodifiableCollection(trains));
     }
     public Station getDeparture(){

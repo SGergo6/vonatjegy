@@ -1,20 +1,31 @@
 package time;
 
-import java.util.Scanner;
-
 public class Time {
     /** 0 órától eltelt percek száma. */
     private int min;
 
     /** Létrehoz egy idő osztályt, megadva az órát és a percet. */
     public Time(int hour, int min){
+        if(min>=60){
+            throw new IllegalArgumentException("A perc túllépte a maximális 60 percet!");
+        }
         this.min = min;
         this.min += 60 * hour;
     }
 
-    /** Létrehoz egy idő osztályt, hour:00 állapotban. */
-    public Time(int hour){
-        this.min = 60 * hour;
+     /** Létrehoz egy idő osztályt, az óra:percet stringként megadva. */
+    public Time(String time){
+        String[] timeSpl = time.split(":");
+        this.min = Integer.parseInt(timeSpl[1]);
+        if(min>=60){
+            throw new IllegalArgumentException("A perc túllépte a maximális 60 percet!");
+        }
+        this.min += 60 * Integer.parseInt(timeSpl[0]);
+    }
+
+    /** Létrehoz egy idő osztályt, amiben a megadott számot adja meg a belső órába. */
+    Time(int mins){
+        this.min = mins;
     }
 
     /** Létrehoz egy idő osztályt, 0:00 értékkel. */
@@ -41,58 +52,37 @@ public class Time {
         return min;
     }
 
-    public Time add(Time t) throws TimeOverflowException{
-        Time newTime =  new Time(0, this.getMinsOnly()+t.getMinsOnly());
-        if (newTime.getMinsOnly() >= 1440){
-            throw new TimeOverflowException();
-        }
-        return newTime;
-    }
 
+    public Time add(Time t) throws TimeOverflowException{
+        return addMins(t.getMinsOnly());
+    }
+    public Time addHours(int addH) throws TimeOverflowException{
+        return addMins(addH*60);
+    }
     public Time addMins(int addMin) throws TimeOverflowException{
         int retMins = this.min;
         retMins += addMin;
         if (retMins >= 1440){
             throw new TimeOverflowException();
         }
-        return new Time(0, retMins);
-    }
-
-    public Time addHours(int addH) throws TimeOverflowException{
-        int retMins = min;
-        retMins += addH * 60;
-        if (retMins >= 1440){
-            throw new TimeOverflowException();
-        }
-        return new Time(0, retMins);
+        return new Time(retMins);
     }
 
     public Time sub(Time t) throws TimeUnderflowException{
-        int retMins = this.min;
-        retMins -= t.getMinsOnly();
-        if(retMins < 0){
-            throw new TimeUnderflowException();
-        }
-        return new Time(0, retMins);
+        return subMins(t.getMinsOnly());
     }
-
+    public Time subHours(int subH) throws TimeUnderflowException{
+        return subMins(subH*60);
+    }
     public Time subMins(int subMin) throws TimeUnderflowException{
         int retMins = this.min;
         retMins -= subMin;
         if(retMins < 0){
             throw new TimeUnderflowException();
         }
-        return new Time(0, retMins);
+        return new Time( retMins);
     }
 
-    public Time subHours(int subH) throws TimeUnderflowException{
-        int retMins = min;
-        retMins -= subH * 60;
-        if(retMins < 0){
-            throw new TimeUnderflowException();
-        }
-        return new Time(0, retMins);
-    }
 
     public boolean greaterThan(Time t){
         return this.getMinsOnly() > t.getMinsOnly();
@@ -112,12 +102,12 @@ public class Time {
 
     public int compareTo(Time t){
         int kulonb = this.getMinsOnly() - t.getMinsOnly();
-        //return Integer.compare(kulonb, 0);
         return Integer.compare(kulonb, 0);
     }
 
     public String toString() {
         int perc = getMins();
+        //Ha 10 perc alatt van, akkor 0-t tesz a szám elé, pl: 10:*05*
         return getHours() + ":" + (perc >= 10 ? perc : ("0" + perc));
     }
 

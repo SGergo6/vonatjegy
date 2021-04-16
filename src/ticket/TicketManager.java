@@ -26,7 +26,7 @@ public abstract class TicketManager {
 
     /**
      * Megvárásol egy jegyet, lefoglalja a széket és levonja a pénzt az egyenlegből.<br>
-     * Egy utas egy vonatra c
+     * Egy utas egy vonatra csak 1x vásárolhat jegyet.
      * @param ticket a megvásárolni kívánt jegy
      * @throws SeatOccupiedException a jegyen szereplő szék már foglalt volt
      * @throws IllegalArgumentException ez az utas ugyanerre a vonatra és helyre már vett jegyet
@@ -71,7 +71,7 @@ public abstract class TicketManager {
      */
     public static ArrayList<Ticket> findTickets(Passenger passenger, Line line){
         HashSet<Ticket> passTickets = passenger.getTickets();
-        passTickets.removeIf(t -> !t.getVehicle().equals(line));
+        passTickets.removeIf(t -> !t.getLine().equals(line));
         return new ArrayList<>(Collections.unmodifiableCollection(passTickets));
     }
 

@@ -1,7 +1,6 @@
 package line.vehicle;
 
 import line.SeatOccupiedException;
-import time.Time;
 
 public class Train extends Vehicle{
     private final Wagon[] wagons;
@@ -33,39 +32,6 @@ public class Train extends Vehicle{
         wagons[wagonNumber].freeSeat(seatNumber);
     }
 
-    /**
-     * @return a vonat indulásának idejét az 1. állomásról
-     */
-    public Time getDepartureTime(){
-        //A stationArrivals a vonal útvonal tömbjének sorrendjében tárolja el az időket!
-        //A vonal sorrendjében halad, az induló állomás a 0. állomás
-        if(!isLineReversed()) {
-            return stationArrivals[0];
-        } else { //Visszafelé halad, az induló állomás az utolsó állomás
-            return stationArrivals[stationArrivals.length-1];
-        }
-    }
-
-    /**
-     * @return a vonat érkezési idejét a végállomásra
-     */
-    public Time getArrivalTime(){
-        //A vonal sorrendjében halad, az érkezési állomás az utolsó állomás
-        if(!isLineReversed()) {
-            return stationArrivals[stationArrivals.length-1];
-        } else { //Visszafelé halad, az érkezési állomás az 1. állomás
-            return stationArrivals[0];
-        }
-    }
-
-    /**
-     * Megkeresi és visszaadja egy megadott állomásra történő érkezés idejét.
-     * @param stationIndex az állomás sorszáma a {@code line route} tömbjében
-     * @return az állomásra való érkezési időt
-     */
-    public Time getStationArrival(int stationIndex){
-        return stationArrivals[stationIndex];
-    }
 
     /**
      * Beállítja 1 kocsi méretét a megadott méretűre.
@@ -84,6 +50,15 @@ public class Train extends Vehicle{
         for (int i = 0; i < wagons.length; i++) {
             this.setWagon(i, seatCount);
         }
+    }
+
+    /**
+     * @param wagonI Kocsi sorszáma
+     * @param seatI Ülés száma
+     * @return Az ülés a megadott kocsiból
+     */
+    public Seat getSeat(int wagonI, int seatI){
+        return wagons[wagonI].getSeat(seatI);
     }
 
 }

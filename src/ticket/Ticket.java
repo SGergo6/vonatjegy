@@ -9,6 +9,7 @@ import line.vehicle.Train;
 import java.util.Objects;
 
 public class Ticket {
+    private Line line;
     private Station from;
     private Station to;
     private Vehicle vehicle;
@@ -35,6 +36,7 @@ public class Ticket {
         this.vehicle = vehicle;
         this.seat = seat;
         this.passenger = passenger;
+        this.line = line;
 
         this.price = Math.abs(line.getRouteStationIndex(to) - line.getRouteStationIndex(from)) * line.getPrice();
 
@@ -45,19 +47,20 @@ public class Ticket {
     }
 
     /**
-     * Megegyezik, ha az utas, az ülés és a vonat megegyezik.
+     * Megegyezik, ha az utas és a vonat megegyezik.
+     * Mivel 1 utas 1 vonaton csak 1x szerepelhet, ezért az ülést nem vizsgálja.
      */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Ticket ticket = (Ticket) obj;
-        return vehicle.equals(ticket.vehicle) && seat.equals(ticket.seat) && passenger.equals(ticket.passenger);
+        return vehicle.equals(ticket.vehicle) && passenger.equals(ticket.passenger);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(vehicle, seat, passenger);
+        return Objects.hash(vehicle, passenger);
     }
 
     /**
@@ -95,5 +98,8 @@ public class Ticket {
      */
     public Passenger getPassenger() {
         return passenger;
+    }
+    public Line getLine() {
+        return line;
     }
 }

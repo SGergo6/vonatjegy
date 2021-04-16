@@ -16,7 +16,7 @@ public class TimeTest {
         t1 = new Time(11, 0);
         t2 = new Time(11, 30);
         t3 = new Time(12, 0);
-        t4 = new Time(13, 45);
+        t4 = new Time("13:45");
     }
 
     @Test

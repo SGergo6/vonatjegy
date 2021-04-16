@@ -83,4 +83,38 @@ public abstract class Vehicle {
         this.stationArrivals = timetable.getArrivals();
     }
 
+    /**
+     * @return a jármű indulásának idejét az 1. állomásról
+     */
+    public Time getDepartureTime(){
+        //A stationArrivals a vonal útvonal tömbjének sorrendjében tárolja el az időket!
+        //A vonal sorrendjében halad, az induló állomás a 0. állomás
+        if(!isLineReversed()) {
+            return stationArrivals[0];
+        } else { //Visszafelé halad, az induló állomás az utolsó állomás
+            return stationArrivals[stationArrivals.length-1];
+        }
+    }
+
+    /**
+     * @return a jármű érkezési idejét a végállomásra
+     */
+    public Time getArrivalTime(){
+        //A vonal sorrendjében halad, az érkezési állomás az utolsó állomás
+        if(!isLineReversed()) {
+            return stationArrivals[stationArrivals.length-1];
+        } else { //Visszafelé halad, az érkezési állomás az 1. állomás
+            return stationArrivals[0];
+        }
+    }
+
+    /**
+     * Megkeresi és visszaadja egy megadott állomásra történő érkezés idejét.
+     * @param stationIndex az állomás sorszáma a {@code line route} tömbjében
+     * @return az állomásra való érkezési időt
+     */
+    public Time getStationArrival(int stationIndex){
+        return stationArrivals[stationIndex];
+    }
+
 }

@@ -3,9 +3,7 @@ package line;
 import station.Station;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public abstract class LineManager {
     private static HashSet<Line> lines;

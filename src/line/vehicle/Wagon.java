@@ -58,7 +58,7 @@ public class Wagon {
         seats[seatNumber].free();
     }
 
-
-
-
+    public Seat getSeat(int seatI) {
+        return seats[seatI];
+    }
 }
