@@ -5,9 +5,10 @@ import line.vehicle.Vehicle;
 import station.Station;
 import time.Time;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Line {
+public class Line implements Serializable{
     private final Station[] route;
     private final String name;
     private int price;

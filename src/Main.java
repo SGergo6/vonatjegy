@@ -1,30 +1,35 @@
-import IO.Input;
+import IO.input;
+import IO.Load;
+import UI.maintenanceUI;
+import UI.userUI;
 import station.Station;
 import station.StationManager;
 import ticket.Passenger;
 import ticket.TicketManager;
-import line.Line;
 import line.LineManager;
+import UI.standardUIMessage;
 
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args) {
         initializeProgram();
 
-        StationManager.newStation("Keleti");
-        StationManager.newStation("Nyugati");
-        StationManager.newStation("Déli");
+        HashSet<Passenger> passengers = new HashSet<>();
 
-        ArrayList<Passenger> passengers = new ArrayList<>();
-        passengers.add(new Passenger("Béla"));
-        passengers.add(new Passenger("Pista"));
-        passengers.add(new Passenger("Jenő"));
+        boolean exit = false;
+        while (!exit) {
+            switch (standardUIMessage.printMenu(standardUIMessage.MENU_SELECT_MODE)) {
+                case 1 -> //Vásárlás
+                        userUI.start();
+                case 2 -> //Karbantarás
+                        maintenanceUI.start();
 
-        Station[] route = new Station[]{StationManager.searchStation("keleti"), StationManager.searchStation("déli")};
-
-        Line line = new Line(route, "S70", 100);
-        //line.newTrain(5);
+                case 0 -> //Kilépés
+                        exit = true;
+            }
+        }
 
 
     }
@@ -32,10 +37,12 @@ public class Main {
     /**
      * Inicializálja az összes inicializálandó osztályt.
      */
-    public static void initializeProgram(){
-        Input.initialize(System.in);
+    public static void initializeProgram() {
+        input.initialize(System.in);
         StationManager.initialize();
         TicketManager.initialize();
         LineManager.initialize();
+
+        StationManager.setStations(Load.loadStations());
     }
 }

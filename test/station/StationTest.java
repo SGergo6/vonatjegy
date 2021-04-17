@@ -33,6 +33,7 @@ public class StationTest {
         StationManager.newStation(nyugati);
         assertEquals(2, StationManager.getStations().size(),
                 "Hozzáadva egy ugyanolyan nevű állomás osztályból, kisbetűkkel, a mérete még mindig 2 kell legyen");
+
     }
 
     @Test

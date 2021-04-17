@@ -6,9 +6,10 @@ import station.Station;
 import line.vehicle.Seat;
 import line.vehicle.Train;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Ticket {
+public class Ticket implements Serializable {
     private Line line;
     private Station from;
     private Station to;

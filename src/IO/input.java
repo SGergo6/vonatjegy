@@ -10,7 +10,7 @@ import java.util.Scanner;
  * <b>String kérése:</b> {@code nextLine()} metódussal<br>
  * <b>Int/double javasolt kérése:</b> {@code getInt/Double(hibaüzenet)} metódussal
  */
-public abstract class Input {
+public abstract class input {
     private static Scanner input;
     private static boolean initialized;
 
@@ -80,7 +80,7 @@ public abstract class Input {
      */
     public static String nextLine() throws InputNotInitializedException{
         checkInput();
-        return input.nextLine();
+        return input.next();
     }
 
     /**

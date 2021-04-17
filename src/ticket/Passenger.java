@@ -41,12 +41,4 @@ public class Passenger extends Person{
     public HashSet<Ticket> getTickets() {
         return new HashSet<>(Collections.unmodifiableCollection(tickets));
     }
-
-    @Override
-    public boolean equals(Object obj){
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Passenger passenger = (Passenger) obj;
-        return(passenger.name.equals(this.name));
-    }
 }

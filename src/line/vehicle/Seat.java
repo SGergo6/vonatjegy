@@ -2,7 +2,9 @@ package line.vehicle;
 
 import line.SeatOccupiedException;
 
-public class Seat{
+import java.io.Serializable;
+
+public class Seat implements Serializable {
     private boolean reserved;
 
     public static final boolean RESERVED = true;

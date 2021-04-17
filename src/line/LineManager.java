@@ -67,4 +67,8 @@ public abstract class LineManager {
         return found.toArray(foundArray);
 
     }
+
+    public static HashSet<Line> getLines() {
+        return new HashSet<>(lines);
+    }
 }

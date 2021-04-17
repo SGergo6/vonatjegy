@@ -66,7 +66,7 @@ public abstract class StationManager {
      * @return a teljes állomás tároló {@code HashSet}-et.
      */
     public static HashSet<Station> getStations() {
-        return new HashSet<>(Collections.unmodifiableCollection(stations));
+        return new HashSet<>(stations);
     }
 
     /**
@@ -86,5 +86,9 @@ public abstract class StationManager {
             }
         }
         throw new StationNotFoundException(stationName);
+    }
+
+    public static void setStations(HashSet<Station> stations) {
+        StationManager.stations = stations;
     }
 }

@@ -1,6 +1,8 @@
 package time;
 
-public class Time {
+import java.io.Serializable;
+
+public class Time implements Comparable<Time>, Serializable {
     /** 0 órától eltelt percek száma. */
     private int min;
 
@@ -100,9 +102,9 @@ public class Time {
         return this.getMinsOnly() <= t.getMinsOnly();
     }
 
+    @Override
     public int compareTo(Time t){
-        int kulonb = this.getMinsOnly() - t.getMinsOnly();
-        return Integer.compare(kulonb, 0);
+        return Integer.compare(this.min, t.getMinsOnly());
     }
 
     public String toString() {

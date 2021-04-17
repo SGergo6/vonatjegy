@@ -4,11 +4,13 @@ import line.LineManager;
 import line.Timetable;
 import time.Time;
 
+import java.io.Serializable;
+
 /**
  * Ennek az osztálynak a segítségével lehet
  * további járműveket hozzáadni a programhoz.
  */
-public abstract class Vehicle {
+public abstract class Vehicle implements Serializable {
     /** Megadja, hogy a vonal útvonalát fordítva kell-e értelmezni.
      * Ez a vonat irányát határozza meg, hogy A -> B-be tart, vagy
      * B -> A-ba tart.<br>
@@ -17,7 +19,9 @@ public abstract class Vehicle {
     private boolean lineReversed;
     /** Érkezési idő az útvonal összes megállójába */
     protected Time[] stationArrivals;
-    private final int ID;
+    private final transient int ID;
+    /** Jármű késése, percben */
+    private int delay;
 
     protected Vehicle(){
         ID = LineManager.nextID();
@@ -117,4 +121,10 @@ public abstract class Vehicle {
         return stationArrivals[stationIndex];
     }
 
+    public int getDelay() {
+        return delay;
+    }
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
 }

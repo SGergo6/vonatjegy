@@ -35,6 +35,10 @@ public class TimeTest {
         assertEquals(t3, t1.addMins(60), "Összadás teszt: 11:00 + 1 óra");
         assertEquals(t2, t1.add(new Time(0,30)), "Összadás teszt: 11:00 + 30 perc");
         assertEquals(t2, t1.addMins(30), "Összadás teszt: 11:00 + 30 perc");
+
+        assertEquals(0, t1.compareTo(t1), "Összehasonlítás teszt: saját magán hívva");
+        assertEquals(1, t2.compareTo(t1), "Összehasonlítás teszt: 11:30 - 11:00 között");
+        assertEquals(-1, t1.compareTo(t2), "Összehasonlítás teszt: 11:00 - 11:30 között");
     }
 
     @Test

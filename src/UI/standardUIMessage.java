@@ -1,12 +1,23 @@
-import IO.Input;
+package UI;
+
+import IO.input;
 
 /** Különböző standard dolgokat ír ki a képernyőre. */
 public abstract class standardUIMessage {
 
-     /** Kiír egy ok üzenetet, és vár egy enterre.*/
+    /** Működési mód */
+    public static final String[] MENU_SELECT_MODE = new String[]{
+            "Kilépés",
+            "Vásárlás mód",
+            "Karbantartó mód"
+    };
+
+
+
+    /** Kiír egy ok üzenetet, és vár egy enterre.*/
     public static void ok(){
-        System.out.println("Ok.");
-        Input.nextLine();
+        System.out.print("Ok... (enter a folytatáshoz) ");
+        input.nextLine();
     }
 
     /**
@@ -15,7 +26,7 @@ public abstract class standardUIMessage {
      * {@code false}, ha nem volt.
      */
     public static boolean yesNo(){
-        String be = Input.nextLine();
+        String be = input.nextLine();
         if(be.equalsIgnoreCase("y")
                 || be.equalsIgnoreCase("yes")
                 || be.equalsIgnoreCase("i")
@@ -38,10 +49,10 @@ public abstract class standardUIMessage {
             max = tmp;
         }
 
-        int be = Input.getInt("Egész számot kell megadni");
+        int be = input.getInt("Egész számot kell megadni");
         while (be < min || be > max){
             System.out.println("Érvénytelen szám, " + min + " és " + max + " között kell lennie.");
-            be = Input.getInt("Egész számot kell megadni");
+            be = input.getInt("Egész számot kell megadni");
         }
 
         return be;
@@ -68,7 +79,7 @@ public abstract class standardUIMessage {
         for (int i = 0; i < items.length; i++) {
             System.out.println(i + ". " + items[i]);
         }
-        return szam_be(0, items.length);
+        return szam_be(0, items.length-1);
     }
 
 

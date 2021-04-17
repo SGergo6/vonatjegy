@@ -80,7 +80,7 @@ public abstract class TicketManager {
      * @return az összes jegyet tartalmazó {@code HashSet}-et.
      */
     public static HashSet<Ticket> getTickets() {
-        return new HashSet<>(Collections.unmodifiableCollection(tickets));
+        return new HashSet<>(tickets);
     }
     /**
      * @return a kézzel kiválasztott ülés felára

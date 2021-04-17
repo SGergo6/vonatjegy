@@ -1,5 +1,6 @@
 package station;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -7,10 +8,10 @@ import java.util.Objects;
 /**
  * Eltárol egy állomást.
  */
-public class Station {
+public class Station implements Comparable<Station>, Serializable {
     private String name;
     /** Az állomás egyéni azonosító száma */
-    private final int stationID;
+    private final transient int stationID;
 
     /**
      * Inicializálja az állomást.
@@ -47,5 +48,10 @@ public class Station {
     @Override
     public int hashCode() {
         return Objects.hash(name.toLowerCase());
+    }
+
+    @Override
+    public int compareTo(Station o) {
+        return this.getName().compareTo(o.getName());
     }
 }

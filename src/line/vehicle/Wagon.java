@@ -3,10 +3,12 @@ package line.vehicle;
 import line.SeatOccupiedException;
 import line.vehicle.Seat;
 
+import java.io.Serializable;
+
 /**
  * Eltárolja egy jármű kocsiját, amelyben a székek helyezkednek el.
  */
-public class Wagon {
+public class Wagon implements Serializable {
     private final Seat[] seats;
 
     /**
