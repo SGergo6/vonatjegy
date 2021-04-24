@@ -152,7 +152,12 @@ public class Line implements Serializable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name.toLowerCase());
+    }
+
+    @Override
+    public String toString() {
+        return name + ", " + price + "Ft/megálló, " + trains.size() + "db vonat";
     }
 }
 

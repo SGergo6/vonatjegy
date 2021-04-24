@@ -1,6 +1,7 @@
 package IO;
 
 import UI.standardUIMessage;
+import line.Line;
 import station.Station;
 
 import java.io.*;
@@ -43,6 +44,33 @@ public abstract class Load {
             } catch (EOFException ignored) {}
 
             return stations;
+        } catch (FileNotFoundException e) {
+            return new HashSet<>();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            throwLoadFailed(e);
+            return null;
+        }
+    }
+
+    public static HashSet<Line> loadLines(){
+        try {
+            FileInputStream f = new FileInputStream("lines.txt");
+            ObjectInputStream in = new ObjectInputStream(f);
+            HashSet<Line> lines = new HashSet<>();
+
+            try {
+                while (true) {
+                    Line l = (Line) in.readObject();
+                    if (l != null) {
+                        lines.add(l);
+                    } else {
+                        break;
+                    }
+                }
+            } catch (EOFException ignored) {}
+
+            return lines;
         } catch (FileNotFoundException e) {
             return new HashSet<>();
         } catch (IOException | ClassNotFoundException e) {

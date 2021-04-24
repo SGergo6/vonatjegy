@@ -32,6 +32,15 @@ public abstract class LineManager {
     }
 
     /**
+     * Hozzáad egy új vonalat.
+     * @return {@code false}, ha nem sikerült hozzáadni a vonalat, mert már létezik.<br>
+     * {@code true}, ha sikerült hozzáadni.
+     */
+    public static boolean addLine(Line line){
+        return lines.add(line);
+    }
+
+    /**
      * Megkeres egy vonalat a neve alapján.
      * @param name vonal neve
      * @return a megtalált vonal, vagy {@code null}, ha nincs találat
@@ -69,5 +78,9 @@ public abstract class LineManager {
 
     public static HashSet<Line> getLines() {
         return new HashSet<>(lines);
+    }
+
+    public static void setLines(HashSet<Line> lines) {
+        LineManager.lines = lines;
     }
 }

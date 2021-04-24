@@ -1,7 +1,5 @@
 package UI;
 
-import IO.input;
-
 /** Különböző standard dolgokat ír ki a képernyőre. */
 public abstract class standardUIMessage {
 
@@ -17,7 +15,7 @@ public abstract class standardUIMessage {
     /** Kiír egy ok üzenetet, és vár egy enterre.*/
     public static void ok(){
         System.out.print("Ok... (enter a folytatáshoz) ");
-        input.nextLine();
+        Main.input.next();
     }
 
     /**
@@ -26,7 +24,7 @@ public abstract class standardUIMessage {
      * {@code false}, ha nem volt.
      */
     public static boolean yesNo(){
-        String be = input.nextLine();
+        String be = Main.input.nextLine();
         if(be.equalsIgnoreCase("y")
                 || be.equalsIgnoreCase("yes")
                 || be.equalsIgnoreCase("i")
@@ -49,10 +47,10 @@ public abstract class standardUIMessage {
             max = tmp;
         }
 
-        int be = input.getInt("Egész számot kell megadni");
+        int be = Main.getInt("Egész számot kell megadni");
         while (be < min || be > max){
             System.out.println("Érvénytelen szám, " + min + " és " + max + " között kell lennie.");
-            be = input.getInt("Egész számot kell megadni");
+            be = Main.getInt("Egész számot kell megadni");
         }
 
         return be;
