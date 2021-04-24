@@ -28,28 +28,28 @@ public class Timetable {
      * Hozzáad egy állomáshoz egy érkezési időt.
      * @param station az állomás, amihez az időt adja
      * @param time a hozzáadandó időpont
-     * @throws RouteException a megadott megálló nem található az útvonalon
+     * @return {@code true}, ha sikerült hozzáadni, {@code false}, ha nem
      */
-    public void addTime(Station station, Time time) throws IllegalArgumentException{
+    public boolean addTime(Station station, Time time){
         Station[] stations = line.getRoute();
 
         for (int i = 0; i < stations.length; i++) {
             if(stations[i].equals(station)){
                 arrival[i] = time;
-                return;
+                return true;
             }
         }
 
-        throw new RouteException(line, station);
+        return false;
     }
 
     /**
      * Megkeresi az állomáshoz tartozó érkezési időt.
      * @param station a keresendő állomás
-     * @return az érkezési időt, vagy ha nincs megadva, {@code null}
-     * @throws RouteException ha nincs ilyen megálló az útvonalon
+     * @return az érkezési időt, vagy ha nincs megadva,
+     * vagy az állomás nincs az útvonalon, {@code null}
      */
-    public Time getStationArrival(Station station) throws RouteException{
+    public Time getStationArrival(Station station){
         Station[] stations = line.getRoute();
 
         for (int i = 0; i < stations.length; i++) {
@@ -58,7 +58,7 @@ public class Timetable {
             }
         }
 
-        throw new RouteException(line, station);
+        return null;
     }
 
     public void setArrival(Time[] arrival) {

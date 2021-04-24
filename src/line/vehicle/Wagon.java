@@ -1,8 +1,5 @@
 package line.vehicle;
 
-import line.SeatOccupiedException;
-import line.vehicle.Seat;
-
 import java.io.Serializable;
 
 /**
@@ -46,10 +43,11 @@ public class Wagon implements Serializable {
     /**
      * Lefoglalja a megadott széket.
      * @param seatNumber a lefoglalandó szék
-     * @throws SeatOccupiedException ha a szék már foglalt volt a lefoglalás előtt
+     * @return  {@code false}, ha a szék már foglalt volt a lefoglalás előtt,
+     * {@code true}, ha sikeres a foglalás
      */
-    public void reserveSeat(int seatNumber) throws SeatOccupiedException{
-        seats[seatNumber].reserve();
+    public boolean reserveSeat(int seatNumber){
+        return seats[seatNumber].reserve();
     }
 
     /**

@@ -45,7 +45,9 @@ public class TicketTest {
     void PurchaseTest() {
 
         Line selectedLine = LineManager.searchLine("S70");
+        assertNotNull(selectedLine);
         Train train = (Train) selectedLine.findVehicle(new Time("10:00"));
+        assertNotNull(train);
 
         TicketManager.purchase(new Ticket(
                 selectedLine,
@@ -64,8 +66,7 @@ public class TicketTest {
         assertEquals(1, passengers.get(0).getTickets().size(), "Utas jegyei között megjelent");
         assertEquals(-150, passengers.get(0).balance, "Egyenleg teszt");
 
-        assertThrows(SeatOccupiedException.class, ()->
-                TicketManager.purchase(new Ticket(
+        assertFalse(TicketManager.purchase(new Ticket(
                         selectedLine,
                         StationManager.searchStation("keleti"),
                         StationManager.searchStation("nyugati"),
@@ -77,8 +78,7 @@ public class TicketTest {
                 "Foglalt ülésre próbál vásárolni"
         );
 
-        assertThrows(IllegalArgumentException.class, ()->
-                TicketManager.purchase(new Ticket(
+        assertFalse(TicketManager.purchase(new Ticket(
                         selectedLine,
                         StationManager.searchStation("nyugati"),
                         StationManager.searchStation("déli"),

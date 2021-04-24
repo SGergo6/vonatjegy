@@ -34,17 +34,16 @@ public abstract class LineManager {
     /**
      * Megkeres egy vonalat a neve alapján.
      * @param name vonal neve
-     * @return a megtalált vonal
-     * @throws LineNotFoundException ha a keresett vonal nem található
+     * @return a megtalált vonal, vagy {@code null}, ha nincs találat
      */
-    public static Line searchLine(String name) throws LineNotFoundException{
+    public static Line searchLine(String name){
         for (Line line : lines) {
             if (line.getName().equalsIgnoreCase(name)) {
                 return line;
             }
         }
 
-        throw new LineNotFoundException();
+        return null;
     }
 
     /**

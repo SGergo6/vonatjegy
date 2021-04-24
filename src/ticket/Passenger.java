@@ -17,24 +17,24 @@ public class Passenger extends Person{
 
     /**
      * Hozzáad egy jegyet az utas jegyeihez, és levonja az egyenlegéből.
-     * @param ticket
+     * @param ticket megvásárolandó jegy
      */
     void purchase(Ticket ticket){
         balance -= ticket.getPrice();
-        //
         tickets.add(ticket);
     }
 
     /**
      * Visszaadja egy utas számára a jegy árát, és eltávolítja a jegyet a listájából.
      * @param ticket az eltávolítandó jegy
-     * @throws TicketNotFoundException az utas nem rendelkezik a jeggyel.
+     * @return {@code true}, ha sikeres, {@code false}, ha az utas nem rendelkezik a jeggyel.
      */
-    void refund(Ticket ticket) throws TicketNotFoundException{
+    boolean refund(Ticket ticket) {
         if(tickets.remove(ticket)) {
             balance += ticket.getPrice();
+            return true;
         } else {
-            throw new TicketNotFoundException("Az utas nem rendelkezik ezzel a jeggyel.", ticket);
+            return false;
         }
     }
 

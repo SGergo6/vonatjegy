@@ -37,7 +37,7 @@ public class TimetableTest {
                 new Time(10, 20)
         };
 
-        assertThrows(RouteException.class, ()-> t1.getStationArrival(StationManager.searchStation("újpest")));
+        assertNull(t1.getStationArrival(StationManager.searchStation("újpest")));
         assertEquals(t1.getStationArrival(new Station("keleti")), expectedTimes[0]);
         assertEquals(t1.getStationArrival(new Station("nyugati")), expectedTimes[1]);
         assertEquals(t1.getStationArrival(new Station("déli")), expectedTimes[2]);
@@ -50,6 +50,7 @@ public class TimetableTest {
         Line line_s70 = LineManager.searchLine("s70");
         Timetable t1 = timetableCreator(line_s70);
 
+        assertNotNull(line_s70);
         line_s70.newTrain(1, 10, Timetable.DIRECTION_NORMAL, t1);
 
         assertEquals(t1, line_s70.getTimetable(line_s70.findVehicle(new Time(10,0))));

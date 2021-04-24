@@ -1,7 +1,5 @@
 package line.vehicle;
 
-import line.SeatOccupiedException;
-
 public class Train extends Vehicle{
     private final Wagon[] wagons;
 
@@ -18,10 +16,11 @@ public class Train extends Vehicle{
      * Lefoglalja a megadott széket a megadott kocsiban.
      * @param wagonNumber a kocsi száma
      * @param seatNumber a lefoglalandó szék
-     * @throws SeatOccupiedException ha a szék már foglalt volt a lefoglalás előtt
+     * @return {@code false}, ha a szék már foglalt volt a
+     * lefoglalás előtt, {@code true}, ha sikers volt a foglalás.
      */
-    public void reserveSeat(int wagonNumber, int seatNumber) throws SeatOccupiedException{
-        wagons[wagonNumber].reserveSeat(seatNumber);
+    public boolean reserveSeat(int wagonNumber, int seatNumber) {
+        return wagons[wagonNumber].reserveSeat(seatNumber);
     }
     /**
      * Felszabadítja a megadott széket a megadott kocsiban.

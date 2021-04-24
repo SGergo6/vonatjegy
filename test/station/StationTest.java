@@ -48,7 +48,7 @@ public class StationTest {
                 "Nagybetű-egyezéses keresés");
         assertEquals(nyugati, StationManager.searchStation("nyugati"),
                 "Nem egyező nagybetűs keresés");
-        assertThrows(StationNotFoundException.class, ()->StationManager.searchStation("Déli"), "Nem létező állomás keresése");
+        assertNull(StationManager.searchStation("Déli"), "Nem létező állomás keresése");
 
 
     }

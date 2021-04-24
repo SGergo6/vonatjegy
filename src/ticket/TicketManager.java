@@ -2,7 +2,6 @@ package ticket;
 
 import line.Line;
 import line.vehicle.Seat;
-import line.SeatOccupiedException;
 
 import java.util.*;
 
@@ -28,31 +27,34 @@ public abstract class TicketManager {
      * Megvárásol egy jegyet, lefoglalja a széket és levonja a pénzt az egyenlegből.<br>
      * Egy utas egy vonatra csak 1x vásárolhat jegyet.
      * @param ticket a megvásárolni kívánt jegy
-     * @throws SeatOccupiedException a jegyen szereplő szék már foglalt volt
-     * @throws IllegalArgumentException ez az utas ugyanerre a vonatra és helyre már vett jegyet
+     * @return {@code false}, ha ez az utas ugyanerre a vonatra és helyre már vett jegyet,
+     * vagy a szék már foglalt volt.<br>{@code true}, ha sikeres volt.
      */
-    public static void purchase(Ticket ticket) throws SeatOccupiedException, IllegalArgumentException{
+    public static boolean purchase(Ticket ticket) {
         if(ticket.getSeat().getStatus() == Seat.RESERVED){
-            throw new SeatOccupiedException(ticket.getSeat());
+            return false;
         }
         if(!tickets.add(ticket)){
-            throw new IllegalArgumentException("A jegy már szerepel a listában!");
+            return false;
         }
         ticket.getSeat().reserve();
         ticket.getPassenger().purchase(ticket);
+        return true;
     }
 
     /**
      * Törli a listából és visszafizeti az utasnak a jegy árát.
      * @param ticket a törölni kívánt jegy
-     * @throws TicketNotFoundException az utas nem rendelkezik a jeggyel vagy a jegy nincs is a listában már.
+     * @return {@code false}, ha az utas nem rendelkezik a jeggyel vagy a jegy nincs is a listában már.<br>
+     * {@code true}, ha sikeres.
      */
-    public static void refund(Ticket ticket) throws TicketNotFoundException{
+    public static boolean refund(Ticket ticket) {
         if(!tickets.remove(ticket)){
-            throw new TicketNotFoundException("A jegy nem található a listában!", ticket);
+            return false;
         }
         ticket.getSeat().free();
         ticket.getPassenger().refund(ticket);
+        return true;
     }
 
     /**

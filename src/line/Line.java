@@ -53,47 +53,31 @@ public class Line implements Serializable{
     /**
      * Megkeres egy vonatot az indulási ideje alapján
      * @param departure indulási idő a vonat 1. állomásáról
-     * @return a megtalált vonat osztálya
-     * @throws TrainNotFoundException ha nem indul vonat a megadott időben
+     * @return a megtalált vonat osztálya, vagy {@code null}
      */
-    public Vehicle findVehicle(Time departure) throws TrainNotFoundException {
+    public Vehicle findVehicle(Time departure) {
         for(Vehicle vehicle : trains){
             if(vehicle.getDepartureTime().equals(departure)){
                 return vehicle;
             }
         }
-        throw new TrainNotFoundException();
-    }
-
-    /**
-     * Megkeres egy vonatot az indulási ideje alapján
-     * @param departure indulási idő a vonat 1. állomásáról
-     * @return a megtalált vonat osztálya
-     * @throws TrainNotFoundException ha nem indul vonat a megadott időben
-     */
-    public Vehicle findVehicle(String departure) throws TrainNotFoundException {
-        Time departureTime = new Time(departure);
-        for(Vehicle vehicle : trains){
-            if(vehicle.getDepartureTime().equals(departureTime)){
-                return vehicle;
-            }
-        }
-        throw new TrainNotFoundException();
+        return null;
     }
 
     /**
      * Megkeres egy vonatot egy időtartományban az indulási ideje alapján
      * @param departure indulási idő a vonat 1. állomásáról
      * @param interval időtartomány (+/-), percben megadva
-     * @return a megtalált vonat osztálya
+     * @return a megtalált vonatok osztályai tömbbe
      */
-    public Vehicle[] findVehicles(Time departure, int interval) throws TrainNotFoundException {
+    public Vehicle[] findVehicles(Time departure, int interval) {
         ArrayList<Vehicle> found = new ArrayList<>();
         for(Vehicle vehicle : trains){
             if(vehicle.getDepartureTime().interval(departure.subMins(interval), departure.addMins(interval))){
                 found.add(vehicle);
             }
         }
+
         return (Vehicle[]) found.toArray();
     }
 
@@ -137,15 +121,17 @@ public class Line implements Serializable{
     /**
      * Visszaadja egy állomás sorszámát az útvonalból.
      * @param station a keresendő állomás
-     * @return az állomás sorszáma
+     * @return az állomás sorszáma, {@code null}, ha az állomás
+     * nem szerepel az útvonalon.
      */
-    public int getRouteStationIndex(Station station){
+    public Integer getRouteStationIndex(Station station) {
         for (int i = 0; i < route.length; i++) {
             if(route[i].getName().equals(station.getName())){
                 return i;
             }
         }
-        throw new RouteException(this, station);
+
+        return null;
     }
 
     /**

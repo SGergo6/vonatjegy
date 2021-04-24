@@ -18,10 +18,8 @@ public abstract class StationManager {
      * Inicializálja az osztályt.
      */
     public static void initialize(){
-        if(stations == null) {
-            nextStationID = 0;
-            stations = new HashSet<>();
-        }
+        nextStationID = 0;
+        stations = new HashSet<>();
     }
 
     /**
@@ -72,10 +70,9 @@ public abstract class StationManager {
     /**
      * Megkeres egy állomást név alapján. Nem nagybetű érzékeny.
      * @param stationName a keresendő állomás neve
-     * @return A megtalált állomás osztályát
-     * @throws StationNotFoundException ha az állomás nem létezik
+     * @return A megtalált állomás osztályát, {@code null}, ha az állomás nem létezik
      */
-    public static Station searchStation(String stationName) throws StationNotFoundException{
+    public static Station searchStation(String stationName){
         Iterator<Station> i = stations.iterator();
         Station search = new Station(stationName);
 
@@ -85,7 +82,8 @@ public abstract class StationManager {
                 return iteratedStation;
             }
         }
-        throw new StationNotFoundException(stationName);
+
+        return null;
     }
 
     public static void setStations(HashSet<Station> stations) {
