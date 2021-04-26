@@ -58,30 +58,36 @@ public class Time implements Comparable<Time>, Serializable {
     }
 
 
-    public Time add(Time t) throws TimeOverflowException{
+    public Time add(Time t) throws TimeException{
         return addMins(t.getMinsOnly());
     }
-    public Time addHours(int addH) throws TimeOverflowException{
+    public Time addHours(int addH) throws TimeException{
         return addMins(addH*60);
     }
-    public Time addMins(int addMin) throws TimeOverflowException{
+    public Time addMins(int addMin) throws TimeException{
         int retMins = this.min;
         retMins += addMin;
         if (retMins >= 1440){
             throw new TimeOverflowException();
         }
+        if (retMins < 0){
+            throw new TimeUnderflowException();
+        }
         return new Time(retMins);
     }
 
-    public Time sub(Time t) throws TimeUnderflowException{
+    public Time sub(Time t) throws TimeException{
         return subMins(t.getMinsOnly());
     }
-    public Time subHours(int subH) throws TimeUnderflowException{
+    public Time subHours(int subH) throws TimeException{
         return subMins(subH*60);
     }
-    public Time subMins(int subMin) throws TimeUnderflowException{
+    public Time subMins(int subMin) throws TimeException{
         int retMins = this.min;
         retMins -= subMin;
+        if (retMins >= 1440){
+            throw new TimeOverflowException();
+        }
         if(retMins < 0){
             throw new TimeUnderflowException();
         }

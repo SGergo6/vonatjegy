@@ -1,44 +1,41 @@
 package ticket;
 
-import java.util.Collections;
-import java.util.HashSet;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class Passenger extends Person{
-    private HashSet<Ticket> tickets;
+public class Passenger extends Person implements Serializable {
+    private int balance;
 
     /**
      * Létrehoz egy új utast.
      * @param name az utas neve
      */
     public Passenger(String name){
-        this.name = name;
-        tickets = new HashSet<>();
+        super(name);
+        balance = 0;
     }
 
     /**
-     * Hozzáad egy jegyet az utas jegyeihez, és levonja az egyenlegéből.
+     * Levonja az utas egyenlegéből a jegy árát.
      * @param ticket megvásárolandó jegy
      */
     void purchase(Ticket ticket){
         balance -= ticket.getPrice();
-        tickets.add(ticket);
     }
 
     /**
-     * Visszaadja egy utas számára a jegy árát, és eltávolítja a jegyet a listájából.
-     * @param ticket az eltávolítandó jegy
-     * @return {@code true}, ha sikeres, {@code false}, ha az utas nem rendelkezik a jeggyel.
+     * Visszaadja egy utas számára a jegy árát.
+     * @param ticket az visszafizetendő jegy
      */
-    boolean refund(Ticket ticket) {
-        if(tickets.remove(ticket)) {
-            balance += ticket.getPrice();
-            return true;
-        } else {
-            return false;
-        }
+    void refund(Ticket ticket) {
+        balance += ticket.getPrice();
     }
 
-    public HashSet<Ticket> getTickets() {
-        return new HashSet<>(Collections.unmodifiableCollection(tickets));
+    public ArrayList<Ticket> getTickets() {
+        return TicketManager.findTickets(this);
+    }
+
+    public int getBalance() {
+        return balance;
     }
 }

@@ -3,6 +3,7 @@ package line.vehicle;
 import line.LineManager;
 import line.Timetable;
 import time.Time;
+import time.TimeException;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -14,24 +15,19 @@ import java.util.Objects;
  */
 public abstract class Vehicle implements Serializable {
     /** Megadja, hogy a vonal útvonalát fordítva kell-e értelmezni.
-     * Ez a vonat irányát határozza meg, hogy A -> B-be tart, vagy
+     * Ez a jármű irányát határozza meg, hogy A -> B-be tart, vagy
      * B -> A-ba tart.<br>
      * Az állomás időket mindig az eredeti sorrend szerint kell megadni,
-     * ennek a változónak a vonat útvonalának kiírásában van szerepe.*/
+     * ennek a változónak a jármű útvonalának kiírásában van szerepe.*/
     private boolean lineReversed;
     /** Érkezési idő az útvonal összes megállójába */
-    protected Time[] stationArrivals;
-    private final transient int ID;
+    private Time[] stationArrivals;
     /** Jármű késése, percben */
     private int delay;
 
-    protected Vehicle(){
-        ID = LineManager.nextID();
-    }
-
     /**
-     * Beállítja a vonat menetrendjét.
-     * @param direction a vonat iránya.<br>Megadása: {@code Timetable.DIRECTION_NORMAL/REVERSED}
+     * Beállítja a jármű menetrendjét.
+     * @param direction a jármű iránya.<br>Megadása: {@code Timetable.DIRECTION_NORMAL/REVERSED}
      * @param timetable Érkezési idő az állomásokra.<br>Az állomás időket mindig
      *                        a vonal eredeti sorrendje szerint kell megadni!
      */
@@ -40,28 +36,33 @@ public abstract class Vehicle implements Serializable {
         setStationArrivals(timetable);
     }
 
-    public int getID() {
-        return ID;
-    }
-
     /**
-     * Visszaadja a vonat menetrendjét.
-     * @return a vonat menetrendje
+     * Visszaadja a jármű menetrendjét.
+     * @return a jármű menetrendje, a késést is hozzáadva minden állomáshoz.
+     * @throws TimeException ha a késést hozzáadva az idő túllépte az ábrázolható 24 órát.
      */
-    public Time[] getStationArrivals() {
-        return stationArrivals;
+    public Time[] getStationArrivals() throws TimeException{
+        if(delay == 0){
+            return stationArrivals.clone();
+        }
+
+        Time[] delayStationArrivals = stationArrivals.clone();
+        for (int i = 0; i < delayStationArrivals.length; i++) {
+            delayStationArrivals[i] = delayStationArrivals[i].addMins(this.delay);
+        }
+        return delayStationArrivals;
     }
 
     /**
-     * @return {@code false}: a vonat a vonal irányában halad.<br>
-     * {@code true}: a vonat a vonal útvonalán fordítvam visszafelé halad.
+     * @return {@code false}: a jármű a vonal irányában halad.<br>
+     * {@code true}: a jármű a vonal útvonalán fordítvam visszafelé halad.
      */
     public boolean isLineReversed() {
         return lineReversed;
     }
 
     /**
-     * Átállítja a vonat haladási irányát.
+     * Átállítja a jármű haladási irányát.
      * @param lineReversed Timetable.DIRECTION_NORMAL/REVERSED.
      */
     public void setLineReversed(boolean lineReversed) {
@@ -71,7 +72,7 @@ public abstract class Vehicle implements Serializable {
     /**
      * Beállítja az állomásokra való érkezési időket a paraméterben megadottakra.<br>
      * Az állomás időket mindig a vonal eredeti sorrendje szerint kell megadni!
-     * Ha a vonat a vonal másik irányába halad, azt a {@code lineReversed} változóban
+     * Ha a jármű a vonal másik irányába halad, azt a {@code lineReversed} változóban
      * kell jelezni.
      * @param stationArrivals érkezési idő az állomásokra.
      */
@@ -81,7 +82,7 @@ public abstract class Vehicle implements Serializable {
 
     /**
      * Beállítja a menetrendet.<br>
-     * Ha a vonat a vonal másik irányába halad, azt a {@code lineReversed} változóban
+     * Ha a jármű a vonal másik irányába halad, azt a {@code lineReversed} változóban
      * kell jelezni.
      * @param timetable a beállítandó menetrend.
      */
@@ -90,7 +91,8 @@ public abstract class Vehicle implements Serializable {
     }
 
     /**
-     * @return a jármű indulásának idejét az 1. állomásról
+     * @return a jármű indulásának idejét az 1. állomásról,
+     * a késés nincs hozzáadva (talán sikerült elindulni késés nélkül).
      */
     public Time getDepartureTime(){
         //A stationArrivals a vonal útvonal tömbjének sorrendjében tárolja el az időket!
@@ -103,14 +105,16 @@ public abstract class Vehicle implements Serializable {
     }
 
     /**
-     * @return a jármű érkezési idejét a végállomásra
+     * @return a jármű érkezési idejét a végállomásra,
+     * a késést is beleszámolva.)
+     * @throws TimeException ha a késést hozzáadva túllépi az ábrázolható 24 órát
      */
-    public Time getArrivalTime(){
+    public Time getArrivalTime() throws TimeException {
         //A vonal sorrendjében halad, az érkezési állomás az utolsó állomás
         if(!isLineReversed()) {
-            return stationArrivals[stationArrivals.length-1];
+            return stationArrivals[stationArrivals.length-1].addMins(delay);
         } else { //Visszafelé halad, az érkezési állomás az 1. állomás
-            return stationArrivals[0];
+            return stationArrivals[0].addMins(delay);
         }
     }
 
@@ -126,8 +130,24 @@ public abstract class Vehicle implements Serializable {
     public int getDelay() {
         return delay;
     }
-    public void setDelay(int delay) {
-        this.delay = delay;
+
+    /**
+     * Hozzáad megadott percnyi késést.
+     * @param delay Hozzáadandó késés (percben)
+     * @return {@code true}, ha sikerült hozzáadni<br>
+     * {@code false}, ha nem sikerült hozzáadni.<br><br>
+     * A hozzáadás sikertelen, ha az új késéssel az egyik
+     * megállóba 24 óra után vagy 0 óra előtt érkezik.
+     */
+    public boolean addDelay(int delay){
+        try{
+            this.delay += delay;
+            this.getStationArrivals();
+            return true;
+        } catch (TimeException e){
+            this.delay -= delay;
+            return false;
+        }
     }
 
     /**

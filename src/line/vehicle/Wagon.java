@@ -7,18 +7,21 @@ import java.io.Serializable;
  */
 public class Wagon implements Serializable {
     private final Seat[] seats;
+    private final int wagonNumber;
 
     /**
      * Létrehoz és inicializál egy új kocsi osztályt.
      * @param seatCount A kocsiba lévő székek darabszáma.
      */
-    public Wagon(int seatCount){
+    public Wagon(int seatCount, int wagonNumber){
         seats = new Seat[seatCount];
 
         //Tömb inicializálása
         for (int i = 0; i < seatCount; i++) {
-            seats[i] = new Seat();
+            seats[i] = new Seat(wagonNumber + "-" + i+1);
         }
+
+        this.wagonNumber = wagonNumber;
     }
 
     /**

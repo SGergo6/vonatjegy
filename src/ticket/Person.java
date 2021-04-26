@@ -5,8 +5,16 @@ import java.util.Objects;
 
 public abstract class Person implements Serializable {
     protected String name;
-    protected int balance;
 
+    public Person(String name){
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public String toString(){
         return name;
     }
@@ -16,11 +24,11 @@ public abstract class Person implements Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Person person = (Person) obj;
-        return(person.name.equals(this.name));
+        return(person.name.equalsIgnoreCase(this.name));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name.toLowerCase());
     }
 }

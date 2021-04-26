@@ -3,8 +3,10 @@ package IO;
 import UI.standardUIMessage;
 import line.Line;
 import station.Station;
+import ticket.Passenger;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -18,8 +20,9 @@ public abstract class Load {
      * tud felépülni rendesen.
      * @param throwable A hiba forrása
      */
-    private static void throwLoadFailed(Throwable throwable) throws LoadFailed{
+    private static void throwLoadFailed(Throwable throwable, String filename) throws LoadFailed{
         System.out.println("Hiba történt a beolvasás során: " + throwable.getMessage());
+        System.out.println("A " + filename + " fájl beolvasása nem sikerült.");
         System.out.println("A program betöltése nem folytatható. Ha a hiba újraindítást követően " +
                 "is fennáll, akkor törölni kell a mentést, és újra kell konfigurálni a programot.");
         standardUIMessage.ok();
@@ -28,7 +31,7 @@ public abstract class Load {
 
     public static HashSet<Station> loadStations(){
         try {
-            FileInputStream f = new FileInputStream("stations.txt");
+            FileInputStream f = new FileInputStream(Save.STATIONS_FILE);
             ObjectInputStream in = new ObjectInputStream(f);
             HashSet<Station> stations = new HashSet<>();
 
@@ -48,14 +51,14 @@ public abstract class Load {
             return new HashSet<>();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            throwLoadFailed(e);
+            throwLoadFailed(e, Save.STATIONS_FILE);
             return null;
         }
     }
 
     public static HashSet<Line> loadLines(){
         try {
-            FileInputStream f = new FileInputStream("lines.txt");
+            FileInputStream f = new FileInputStream(Save.LINES_FILE);
             ObjectInputStream in = new ObjectInputStream(f);
             HashSet<Line> lines = new HashSet<>();
 
@@ -74,7 +77,33 @@ public abstract class Load {
         } catch (FileNotFoundException e) {
             return new HashSet<>();
         } catch (IOException | ClassNotFoundException e) {
-            throwLoadFailed(e);
+            throwLoadFailed(e, Save.LINES_FILE);
+            return null;
+        }
+    }
+
+    public static HashSet<Passenger> loadPassengers(){
+        try{
+            FileInputStream f = new FileInputStream(Save.PASSENGERS_FILE);
+            ObjectInputStream in = new ObjectInputStream(f);
+            HashSet<Passenger> passengers = new HashSet<>();
+
+            try {
+                while (true) {
+                    Passenger p = (Passenger) in.readObject();
+                    if (p != null) {
+                        passengers.add(p);
+                    } else {
+                        break;
+                    }
+                }
+            } catch (EOFException ignored) {}
+
+            return passengers;
+        } catch (FileNotFoundException e) {
+            return new HashSet<>();
+        } catch (IOException | ClassNotFoundException e) {
+            throwLoadFailed(e, Save.PASSENGERS_FILE);
             return null;
         }
     }

@@ -1,6 +1,8 @@
 package UI;
 
 import IO.Load;
+import IO.Save;
+import station.Station;
 import station.StationManager;
 import ticket.Passenger;
 import ticket.TicketManager;
@@ -12,17 +14,18 @@ import java.util.Scanner;
 
 public class Main {
     public static Scanner input;
+    private static HashSet<Passenger> passengers;
 
     public static void main(String[] args) {
         initializeProgram();
 
-        HashSet<Passenger> passengers = new HashSet<>();
+
 
         boolean exit = false;
         while (!exit) {
             switch (standardUIMessage.printMenu(standardUIMessage.MENU_SELECT_MODE)) {
                 case 1 -> //Vásárlás
-                        userUI.start();
+                        userUI.start(passengers);
                 case 2 -> //Karbantarás
                         maintenanceUI.start();
 
@@ -47,6 +50,7 @@ public class Main {
         LineManager.initialize();
         input = new Scanner(System.in);
 
+        passengers = Load.loadPassengers();
         StationManager.setStations(Load.loadStations());
         LineManager.setLines(Load.loadLines());
     }

@@ -1,7 +1,9 @@
 package ticket;
 
 import line.Line;
+import line.Timetable;
 import line.vehicle.Vehicle;
+import line.vehicle.Wagon;
 import station.Station;
 import line.vehicle.Seat;
 import line.vehicle.Train;
@@ -9,7 +11,7 @@ import line.vehicle.Train;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Ticket implements Serializable {
+public class Ticket implements Serializable, Comparable<Ticket> {
     private Line line;
     private Station from;
     private Station to;
@@ -102,5 +104,20 @@ public class Ticket implements Serializable {
     }
     public Line getLine() {
         return line;
+    }
+
+    @Override
+    public String toString() {
+        //s80 from 11:30 -> to 12:30, 1-5 ülés. 230ft
+        Timetable table = line.getTimetable(vehicle);
+
+        return this.line.getName() + "\t" + from.getName() + "\t\t" + table.getStationArrival(from)
+                + " -> " + to.getName() + "\t\t" + table.getStationArrival(to) + seat.getSeatNumber() + " ülés.\t"
+                + price + "Ft";
+    }
+
+    @Override
+    public int compareTo(Ticket t) {
+        return Integer.compare(this.getPrice(), t.getPrice());
     }
 }

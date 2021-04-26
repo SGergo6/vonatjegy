@@ -63,7 +63,9 @@ public abstract class TicketManager {
      * @return az utas összes birtokolt jegye
      */
     public static ArrayList<Ticket> findTickets(Passenger passenger){
-        return new ArrayList<>(Collections.unmodifiableCollection(passenger.getTickets()));
+        ArrayList<Ticket> returnTickets = new ArrayList<>(getTickets());
+        returnTickets.removeIf(t -> !t.getPassenger().equals(passenger));
+        return returnTickets;
     }
 
     /**
@@ -72,9 +74,9 @@ public abstract class TicketManager {
      * @return az utas összes birtokolt jegye
      */
     public static ArrayList<Ticket> findTickets(Passenger passenger, Line line){
-        HashSet<Ticket> passTickets = passenger.getTickets();
+        ArrayList<Ticket> passTickets = findTickets(passenger);
         passTickets.removeIf(t -> !t.getLine().equals(line));
-        return new ArrayList<>(Collections.unmodifiableCollection(passTickets));
+        return new ArrayList<>(passTickets);
     }
 
 

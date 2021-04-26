@@ -4,12 +4,14 @@ import java.io.Serializable;
 
 public class Seat implements Serializable {
     private boolean reserved;
+    private final String seatNumber;
 
     public static final boolean RESERVED = true;
     public static final boolean FREE = false;
 
-    Seat(){
+    Seat(String seatNumber){
         reserved = FREE;
+        this.seatNumber = seatNumber;
     }
 
     /**
@@ -38,5 +40,8 @@ public class Seat implements Serializable {
      */
     public boolean getStatus(){
         return reserved;
+    }
+    public String getSeatNumber() {
+        return seatNumber;
     }
 }

@@ -64,7 +64,7 @@ public class TicketTest {
         assertTrue(train.getSeat(0,5).getStatus(), "Az ülés foglalt lett");
         assertFalse(train.getSeat(1,5).getStatus(), "Egy másik kocsi ugyanolyan indexű eleme nem foglalt");
         assertEquals(1, passengers.get(0).getTickets().size(), "Utas jegyei között megjelent");
-        assertEquals(-150, passengers.get(0).balance, "Egyenleg teszt");
+        assertEquals(-150, passengers.get(0).getBalance(), "Egyenleg teszt");
 
         assertFalse(TicketManager.purchase(new Ticket(
                         selectedLine,
@@ -100,7 +100,7 @@ public class TicketTest {
         assertEquals(0, TicketManager.getTickets().size(), "A ticketmanager kitörölte a jegyet");
         assertFalse(train.getSeat(0,5).getStatus(), "Az ülés felszabadult");
         assertEquals(0, passengers.get(0).getTickets().size(), "Utas jegyei közül kitörlődött");
-        assertEquals(0, passengers.get(0).balance, "Egyenleg teszt");
+        assertEquals(0, passengers.get(0).getBalance(), "Egyenleg teszt");
 
     }
 }

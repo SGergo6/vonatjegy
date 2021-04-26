@@ -3,7 +3,6 @@ package line;
 import station.Station;
 import time.Time;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -78,6 +77,20 @@ public class Timetable {
 
     public int Size(){
         return arrival.length;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tableString = new StringBuilder();
+        Station[] route = this.getStations();
+        if(arrival[0].greaterThan(arrival[arrival.length-1]))
+            Collections.reverse(Arrays.asList(route));
+
+        for (Station station : route){
+            tableString.append(station + ": " + this.getStationArrival(station) + "\n");
+        }
+
+        return tableString.toString();
     }
 
     @Override

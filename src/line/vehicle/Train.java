@@ -38,7 +38,7 @@ public class Train extends Vehicle{
      * @param seatCount a kocsiban lévő ülések száma.
      */
     public void setWagon(int index, int seatCount){
-        wagons[index] = new Wagon(seatCount);
+        wagons[index] = new Wagon(seatCount, index);
     }
 
     /**

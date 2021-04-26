@@ -31,7 +31,7 @@ public abstract class standardUIMessage {
      * {@code false}, ha nem volt.
      */
     public static boolean yesNo(){
-        String be = Main.input.nextLine();
+        String be = Main.input.next();
         if(be.equalsIgnoreCase("y")
                 || be.equalsIgnoreCase("yes")
                 || be.equalsIgnoreCase("i")

@@ -8,6 +8,7 @@ import line.comparator.LineNameComparator;
 import line.comparator.LineVehicleCountComparator;
 import line.comparator.PriceComparator;
 import line.vehicle.Train;
+import line.vehicle.Vehicle;
 import station.Station;
 import station.StationManager;
 import time.Time;
@@ -16,17 +17,15 @@ import java.util.*;
 
 public abstract class maintenanceUI {
     private static final int EXIT = 0;
-    private static final int SELECT_STATION = 1;
-    private static final int NEW_LINE = 2;
-    private static final int NEW_TRAIN = 3;
-    private static final int NEW_STATION = 4;
-    private static final int LIST = 5;
-    private static final int MANAGE_DELAY = 6;
+    private static final int NEW_LINE = 1;
+    private static final int NEW_TRAIN = 2;
+    private static final int NEW_STATION = 3;
+    private static final int LIST = 4;
+    private static final int MANAGE_DELAY = 5;
 
     /** Karbantartó mód opciói */
     public static final String[] MENU_MAINTENANCE_MAIN = new String[]{
             "Kilépés",
-            "Jelenlegi állomás beállítása",
             "Új vonal hozzáadása",
             "Vonat hozzáadása",
             "Állomás hozzáadása",
@@ -43,9 +42,6 @@ public abstract class maintenanceUI {
 
             switch (option) {
 
-                case SELECT_STATION:
-                    break;
-
                 case NEW_LINE:
                     Line line = newLine();
                     if (line != null){
@@ -59,7 +55,7 @@ public abstract class maintenanceUI {
                     break;
 
                 case NEW_TRAIN:
-                    Line selectedLine = selectLine(LineManager.getLines());
+                    Line selectedLine = listUI.selectLine(LineManager.getLines());
                     if(selectedLine == null) break;
                     Train addTrain = newTrain(selectedLine);
                     if(addTrain != null){
@@ -116,20 +112,30 @@ public abstract class maintenanceUI {
                             break;
 
                         case listUI.TRAINS:
-                            selectedLine = selectLine(LineManager.getLines());
+                            Collection<Line> linesToList = LineManager.getLines();
+                            linesToList.removeIf(l -> l.getVehicles().size() == 0);
+                            selectedLine = listUI.selectLine(linesToList);
                             if(selectedLine == null) break;
-                            listUI.listVehicles(selectedLine);
+                            listUI.listVehicles(selectedLine, false);
                             standardUIMessage.ok();
                             break;
 
                         case listUI.ROUTE:
-                            selectedLine = selectLine(LineManager.getLines());
+                            selectedLine = listUI.selectLine(LineManager.getLines());
                             if(selectedLine == null) break;
                             listUI.listStations(Arrays.asList(selectedLine.getRoute()), false, false);
                             standardUIMessage.ok();
                             break;
 
                         case listUI.TIMETABLE:
+                            linesToList = LineManager.getLines();
+                            linesToList.removeIf(l -> l.getVehicles().size() == 0);
+                            selectedLine = listUI.selectLine(linesToList);
+                            if(selectedLine == null) break;
+                            Vehicle selectedVehicle = listUI.selectVehicle(selectedLine);
+                            if(selectedVehicle == null) break;
+                            System.out.println(selectedLine.getTimetable(selectedVehicle));
+                            standardUIMessage.ok();
                             break;
 
                         case listUI.EXIT:
@@ -138,6 +144,19 @@ public abstract class maintenanceUI {
                     break;
 
                 case MANAGE_DELAY:
+                    Collection<Line> linesToList = LineManager.getLines();
+                    linesToList.removeIf(l -> l.getVehicles().size() == 0);
+                    selectedLine = listUI.selectLine(linesToList);
+                    if(selectedLine == null) break;
+                    Vehicle selectedVehicle = listUI.selectVehicle(selectedLine);
+                    if(selectedVehicle == null) break;
+                    System.out.print("Hozzáadandó vagy eltávolítandó késés: ");
+                    int delay = Main.getInt();
+                    if(selectedVehicle.addDelay(delay))
+                        System.out.println(delay + " perc késés sikeresen hozzáadva.");
+                    else
+                        System.out.println("Nem sikerült a késés hozzáadása.");
+                    standardUIMessage.ok();
                     break;
 
                 case EXIT:
@@ -167,6 +186,10 @@ public abstract class maintenanceUI {
         if (price < 0) return null;
 
         ArrayList<Station> orderedStations = listUI.listStations(StationManager.getStations(), true, true);
+        if(orderedStations.size() < 2){
+            System.out.println("Nincs elegendő mennyiségű állomás a programban új vonal létrehozásához.");
+            return null;
+        }
         System.out.println("Állomások sorszáma, érkezési sorrendben, vesszővel elválasztva:");
         String[] selectedStr = Main.input.next().split(",");
 
@@ -260,21 +283,6 @@ public abstract class maintenanceUI {
 
         train.setTimetable(reversed, timetable);
         return train;
-    }
-
-
-
-    /**
-     * Kér a felhasználótól egy vonalat a megadott vonalak közül.
-     * @param lines választható vonalak
-     * @return választott vonal
-     */
-    private static Line selectLine(Collection<Line> lines){
-        ArrayList<Line> listedLines = listUI.listLines(lines, new LineNameComparator(), true);
-        System.out.print("Vonal sorszáma: ");
-        int selectedLine = Main.getInt()-1;
-        if(selectedLine < 0 || selectedLine >= listedLines.size()) return null;
-        return listedLines.get(selectedLine);
     }
 }
 
