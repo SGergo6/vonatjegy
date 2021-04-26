@@ -12,7 +12,7 @@ public class Line implements Serializable{
     private final Station[] route;
     private final String name;
     private int price;
-    private HashSet<Vehicle> trains;
+    private HashSet<Vehicle> vehicles;
 
 
     /**
@@ -25,7 +25,7 @@ public class Line implements Serializable{
         this.route = route;
         this.name = name;
         this.price = price;
-        trains = new HashSet<>();
+        vehicles = new HashSet<>();
     }
 
     /**
@@ -39,7 +39,15 @@ public class Line implements Serializable{
         Train train = new Train(wagonCount);
         train.setAllWagon(seatPerWagon);
         train.setTimetable(direction, timetable);
-        trains.add(train);
+        vehicles.add(train);
+    }
+    /**
+     * Hozzáad egy új vonatot a vonalhoz.
+     * @param t hozzáadandó vonat
+     * @return {@code true}, ha sikerült hozzáadni, {@code false}, ha nem sikerült.
+     */
+    public boolean newTrain(Train t){
+        return vehicles.add(t);
     }
 
     /**
@@ -47,7 +55,7 @@ public class Line implements Serializable{
      * @param vehicle valamilyen jármű osztály leszármazott.
      */
     public void newVehicle(Vehicle vehicle){
-        trains.add(vehicle);
+        vehicles.add(vehicle);
     }
 
     /**
@@ -56,7 +64,7 @@ public class Line implements Serializable{
      * @return a megtalált vonat osztálya, vagy {@code null}
      */
     public Vehicle findVehicle(Time departure) {
-        for(Vehicle vehicle : trains){
+        for(Vehicle vehicle : vehicles){
             if(vehicle.getDepartureTime().equals(departure)){
                 return vehicle;
             }
@@ -72,7 +80,7 @@ public class Line implements Serializable{
      */
     public Vehicle[] findVehicles(Time departure, int interval) {
         ArrayList<Vehicle> found = new ArrayList<>();
-        for(Vehicle vehicle : trains){
+        for(Vehicle vehicle : vehicles){
             if(vehicle.getDepartureTime().interval(departure.subMins(interval), departure.addMins(interval))){
                 found.add(vehicle);
             }
@@ -97,7 +105,7 @@ public class Line implements Serializable{
     }
 
     public Station[] getRoute() {
-        return route;
+        return route.clone();
     }
     public String getName() {
         return name;
@@ -105,8 +113,8 @@ public class Line implements Serializable{
     public int getPrice() {
         return price;
     }
-    public HashSet<Vehicle> getTrains() {
-        return new HashSet<>(Collections.unmodifiableCollection(trains));
+    public HashSet<Vehicle> getVehicles() {
+        return new HashSet<>(Collections.unmodifiableCollection(vehicles));
     }
     public Station getDeparture(){
         return route[0];
@@ -157,7 +165,7 @@ public class Line implements Serializable{
 
     @Override
     public String toString() {
-        return name + ", " + price + "Ft/megálló, " + trains.size() + "db vonat";
+        return name + ", " + price + "Ft/megálló, " + vehicles.size() + "db vonat";
     }
 }
 

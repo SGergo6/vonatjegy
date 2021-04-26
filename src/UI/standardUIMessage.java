@@ -1,5 +1,7 @@
 package UI;
 
+import java.io.IOException;
+
 /** Különböző standard dolgokat ír ki a képernyőre. */
 public abstract class standardUIMessage {
 
@@ -15,7 +17,12 @@ public abstract class standardUIMessage {
     /** Kiír egy ok üzenetet, és vár egy enterre.*/
     public static void ok(){
         System.out.print("Ok... (enter a folytatáshoz) ");
-        Main.input.next();
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //Main.input.next();
     }
 
     /**
@@ -47,10 +54,10 @@ public abstract class standardUIMessage {
             max = tmp;
         }
 
-        int be = Main.getInt("Egész számot kell megadni");
+        int be = Main.getInt();
         while (be < min || be > max){
             System.out.println("Érvénytelen szám, " + min + " és " + max + " között kell lennie.");
-            be = Main.getInt("Egész számot kell megadni");
+            be = Main.getInt();
         }
 
         return be;

@@ -5,6 +5,8 @@ import line.Timetable;
 import time.Time;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Ennek az osztálynak a segítségével lehet
@@ -126,5 +128,26 @@ public abstract class Vehicle implements Serializable {
     }
     public void setDelay(int delay) {
         this.delay = delay;
+    }
+
+    /**
+     * Megegyezik 2 jármű, ha ugyanabba az irányba mennek, és ugyanakkor érnek ode minden állomásra.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return lineReversed == vehicle.lineReversed && Arrays.equals(stationArrivals, vehicle.stationArrivals);
+    }
+
+    /**
+     * Irány és állomási érkezési idő alapján generálja
+     */
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(lineReversed);
+        result = 31 * result + Arrays.hashCode(stationArrivals);
+        return result;
     }
 }

@@ -9,7 +9,7 @@ public class Seat implements Serializable {
     public static final boolean FREE = false;
 
     Seat(){
-        reserved = false;
+        reserved = FREE;
     }
 
     /**

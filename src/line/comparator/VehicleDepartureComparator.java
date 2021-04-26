@@ -1,13 +1,13 @@
 package line.comparator;
 
-import line.vehicle.Train;
+import line.vehicle.Vehicle;
 
 import java.util.Comparator;
 
-public class TrainDepartureComparator implements Comparator<Train> {
+public class VehicleDepartureComparator implements Comparator<Vehicle> {
 
     @Override
-    public int compare(Train o1, Train o2) {
+    public int compare(Vehicle o1, Vehicle o2) {
         return o1.getDepartureTime().compareTo(o2.getDepartureTime());
     }
 }

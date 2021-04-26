@@ -3,14 +3,16 @@ package UI;
 import IO.Save;
 import line.Line;
 import line.LineManager;
+import line.Timetable;
 import line.comparator.LineNameComparator;
-import line.comparator.LineTrainCountComparator;
+import line.comparator.LineVehicleCountComparator;
 import line.comparator.PriceComparator;
+import line.vehicle.Train;
 import station.Station;
 import station.StationManager;
+import time.Time;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 public abstract class maintenanceUI {
     private static final int EXIT = 0;
@@ -57,6 +59,18 @@ public abstract class maintenanceUI {
                     break;
 
                 case NEW_TRAIN:
+                    Line selectedLine = selectLine(LineManager.getLines());
+                    if(selectedLine == null) break;
+                    Train addTrain = newTrain(selectedLine);
+                    if(addTrain != null){
+                        if(selectedLine.newTrain(addTrain)){
+                            System.out.println("Vonat sikeresen hozzáadva.");
+                            Save.save(Save.LINES_FILE, LineManager.getLines());
+                        } else {
+                            System.out.println("A vonat hozzáadása sikertelen.");
+                            standardUIMessage.ok();
+                        }
+                    }
                     break;
 
                 case NEW_STATION:
@@ -87,7 +101,7 @@ public abstract class maintenanceUI {
                                 case 2 -> //Ár
                                         comparator = new PriceComparator();
                                 case 3 -> //Vonatok száma
-                                        comparator = new LineTrainCountComparator();
+                                        comparator = new LineVehicleCountComparator();
                             }
 
                             if(comparator != null) {
@@ -97,16 +111,31 @@ public abstract class maintenanceUI {
                             break;
 
                         case listUI.STATIONS:
-                            listUI.listStations(StationManager.getStations(), false);
+                            listUI.listStations(StationManager.getStations(), false, true);
                             standardUIMessage.ok();
                             break;
 
                         case listUI.TRAINS:
+                            selectedLine = selectLine(LineManager.getLines());
+                            if(selectedLine == null) break;
+                            listUI.listVehicles(selectedLine);
+                            standardUIMessage.ok();
+                            break;
+
+                        case listUI.ROUTE:
+                            selectedLine = selectLine(LineManager.getLines());
+                            if(selectedLine == null) break;
+                            listUI.listStations(Arrays.asList(selectedLine.getRoute()), false, false);
+                            standardUIMessage.ok();
+                            break;
+
+                        case listUI.TIMETABLE:
                             break;
 
                         case listUI.EXIT:
                             break;
                     }
+                    break;
 
                 case MANAGE_DELAY:
                     break;
@@ -134,10 +163,10 @@ public abstract class maintenanceUI {
         if (name.equals("") || name.equals("0")) return null;
 
         System.out.print("Megállónkénti jegyár: ");
-        int price = Main.getInt("Egész számnak kell lennie!");
+        int price = Main.getInt();
         if (price < 0) return null;
 
-        ArrayList<Station> orderedStations = listUI.listStations(StationManager.getStations(), true);
+        ArrayList<Station> orderedStations = listUI.listStations(StationManager.getStations(), true, true);
         System.out.println("Állomások sorszáma, érkezési sorrendben, vesszővel elválasztva:");
         String[] selectedStr = Main.input.next().split(",");
 
@@ -155,7 +184,7 @@ public abstract class maintenanceUI {
         ArrayList<Station> selectedStations = new ArrayList<>();
         for (int i = 0; i < selectedStr.length; i++) {
             try {
-                int selectI = Integer.parseInt(selectedStr[i]);
+                int selectI = Integer.parseInt(selectedStr[i])-1;
                 selectedStations.add(orderedStations.get(selectI));
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Az egyik szám (" + selectedStr[i]
@@ -180,4 +209,72 @@ public abstract class maintenanceUI {
 
         return new Line( selectedStations.toArray(new Station[0]), name, price);
     }
+
+    /**
+     * Bekér a felhasználótól egy új vonatot és az adatait.
+     * @param line a vonal amin a vonat közlekedni fog
+     * @return vonat osztály, vagy {@code null}, ha a bekérés nem sikerült
+     */
+    public static Train newTrain(Line line){
+        System.out.print("Vonat kocsijainak száma: ");
+        int wagonC = Main.getInt();
+        if(wagonC <= 0) return null;
+        Train train = new Train(wagonC);
+
+        System.out.print("Ülések száma a kocsikban: ");
+        int seatC = Main.getInt();
+        if(seatC <= 0) return null;
+        train.setAllWagon(seatC);
+
+        System.out.println("Induló állomás: ");
+        //Kiírja az első és az utolsó állomás nevét.
+        //Ha 0-t választ, akkor egyenesen halad, ha 1-et, akkor visszafelé.
+        boolean reversed = standardUIMessage.printMenu(new String[]{
+                line.getRoute()[0].toString(),
+                line.getRoute()[line.getRoute().length - 1].toString()
+        }) == 0 ? Timetable.DIRECTION_NORMAL : Timetable.DIRECTION_REVERSED;
+
+        Timetable timetable = new Timetable(line);
+        Station[] route = timetable.getStations();
+        if(reversed == Timetable.DIRECTION_REVERSED) {
+            Collections.reverse(Arrays.asList(route));
+        }
+
+        System.out.println("Indulási idő megadása minden állomáshoz, óra:perc formátumban.");
+        for (Station station : route) {
+            Time time;
+
+            while (true) {
+                System.out.print(station + " indulási idő: ");
+                try {
+                    time = new Time(Main.input.next());
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Hiba az idő hozzáadása közben: " + e.getMessage());
+                }
+            }
+
+            timetable.addTime(station, time);
+        }
+
+
+        train.setTimetable(reversed, timetable);
+        return train;
+    }
+
+
+
+    /**
+     * Kér a felhasználótól egy vonalat a megadott vonalak közül.
+     * @param lines választható vonalak
+     * @return választott vonal
+     */
+    private static Line selectLine(Collection<Line> lines){
+        ArrayList<Line> listedLines = listUI.listLines(lines, new LineNameComparator(), true);
+        System.out.print("Vonal sorszáma: ");
+        int selectedLine = Main.getInt()-1;
+        if(selectedLine < 0 || selectedLine >= listedLines.size()) return null;
+        return listedLines.get(selectedLine);
+    }
 }
+

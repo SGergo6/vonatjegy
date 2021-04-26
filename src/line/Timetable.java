@@ -1,10 +1,11 @@
 package line;
 
 import station.Station;
-import station.StationManager;
 import time.Time;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -14,9 +15,9 @@ public class Timetable {
     /** A jármű a vonal {@code route} tömb útvonalán halad */
     public static final boolean DIRECTION_NORMAL = false;
     /** A jármű <b>fordítva</b> halad a vonal tömb útvonalán */
-    public static final boolean DIRECTION_REVERSED = false;
+    public static final boolean DIRECTION_REVERSED = true;
 
-    private Line line;
+    private final Line line;
     private Time[] arrival;
 
     public Timetable(Line line){

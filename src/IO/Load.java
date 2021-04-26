@@ -74,7 +74,6 @@ public abstract class Load {
         } catch (FileNotFoundException e) {
             return new HashSet<>();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
             throwLoadFailed(e);
             return null;
         }

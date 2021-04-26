@@ -1,13 +1,10 @@
 package UI;
 
 import IO.Load;
-import UI.maintenanceUI;
-import UI.userUI;
 import station.StationManager;
 import ticket.Passenger;
 import ticket.TicketManager;
 import line.LineManager;
-import UI.standardUIMessage;
 
 import java.util.HashSet;
 import java.util.InputMismatchException;
@@ -56,15 +53,14 @@ public class Main {
 
     /**
      * Kér a felhasználótól egy {@code int} értéket, addig próbálkozik, ameddig nem jár sikerrel.
-     * @param errorMsg ezt a megadott üzenetet írja ki hiba esetén a felhasználónak, mielőtt újrakéri az értéket.
      * @return a felhasználótól kapott {@code int}.
      */
-    public static int getInt(String errorMsg) {
+    public static int getInt() {
         while (true){
             try {
                 return Integer.parseInt(input.next());
             } catch (InputMismatchException | NumberFormatException e) {
-                System.out.println(errorMsg);
+                System.out.println("Egész számot kell megadni!");
             }
         }
     }

@@ -23,6 +23,9 @@ public class Time implements Comparable<Time>, Serializable {
             throw new IllegalArgumentException("A perc túllépte a maximális 60 percet!");
         }
         this.min += 60 * Integer.parseInt(timeSpl[0]);
+        if(this.min >= 1440){
+            throw new IllegalArgumentException("A megadott idő több, mint 23:59!");
+        }
     }
 
     /** Létrehoz egy idő osztályt, amiben a megadott számot adja meg a belső órába. */

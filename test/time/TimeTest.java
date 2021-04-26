@@ -39,6 +39,11 @@ public class TimeTest {
         assertEquals(0, t1.compareTo(t1), "Összehasonlítás teszt: saját magán hívva");
         assertEquals(1, t2.compareTo(t1), "Összehasonlítás teszt: 11:30 - 11:00 között");
         assertEquals(-1, t1.compareTo(t2), "Összehasonlítás teszt: 11:00 - 11:30 között");
+
+        assertThrows(IllegalArgumentException.class, ()-> new Time("24:00"));
+        assertThrows(IllegalArgumentException.class, ()-> new Time("25:40"));
+        assertThrows(IllegalArgumentException.class, ()-> new Time("12:60"));
+        assertEquals(t1, new Time("11:00"));
     }
 
     @Test
