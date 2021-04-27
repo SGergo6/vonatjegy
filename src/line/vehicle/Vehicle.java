@@ -127,6 +127,7 @@ public abstract class Vehicle implements Serializable {
         return stationArrivals[stationIndex];
     }
 
+
     public int getDelay() {
         return delay;
     }
@@ -149,6 +150,20 @@ public abstract class Vehicle implements Serializable {
             return false;
         }
     }
+
+
+    /** @return hány üres szék van összesen a vonaton */
+    public abstract int getTotalFreeSeatCount();
+
+    /** @return hány szék van a vonaton összesen */
+    public abstract int getTotalSeatCount();
+
+    /**
+     * @param connectRequest legalább ennyi összefüggő széknek kell lennie
+     * @return az összefüggő szabad székek számát
+     */
+    public abstract int getTotalConnectedFreeSeatCount(int connectRequest);
+
 
     /**
      * Megegyezik 2 jármű, ha ugyanabba az irányba mennek, és ugyanakkor érnek ode minden állomásra.

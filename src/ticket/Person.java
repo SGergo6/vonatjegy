@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public abstract class Person implements Serializable {
-    protected String name;
+    protected final String name;
 
-    public Person(String name){
+    protected Person(String name){
         this.name = name;
     }
 

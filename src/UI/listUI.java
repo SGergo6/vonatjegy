@@ -79,7 +79,7 @@ public abstract class listUI {
      * <b>Az indexet +1-el mutatja</b>, hogy legyen lehetőség a vissza implementálására is!
      * @return a sorba rendezett vonatok listáját.
      */
-    public static ArrayList<Vehicle> listVehicles(Line line, boolean showIndex){
+    public static ArrayList<Vehicle> listVehicles(Line line, boolean showIndex, boolean displayFreeSeat){
         Station start_normal = line.getRoute()[0];
         Station start_reverse = line.getRoute()[line.getRoute().length-1];
 
@@ -89,8 +89,11 @@ public abstract class listUI {
         int i = 0;
         for (Vehicle vehicle : vehicles){
             if(showIndex) System.out.print(i+1 + ". ");
-            System.out.println((vehicle.isLineReversed() == Timetable.DIRECTION_NORMAL ? start_normal : start_reverse)
+            System.out.print((vehicle.isLineReversed() == Timetable.DIRECTION_NORMAL ? start_normal : start_reverse)
             + ":\t\t" + vehicle.getDepartureTime() + "\tkésés: " + vehicle.getDelay() + "p");
+            if(displayFreeSeat)
+                System.out.print("\t" + vehicle.getTotalFreeSeatCount() + " szabad szék");
+            System.out.println();
             i++;
         }
 
@@ -109,7 +112,7 @@ public abstract class listUI {
         Collections.sort(sortedTickets);
 
         for (int i = 0; i < sortedTickets.size(); i++) {
-            if(showIndex) System.out.println(i + 1 + ". ");
+            if(showIndex) System.out.print(i + 1 + ". ");
             System.out.println(sortedTickets.get(i));
         }
         return sortedTickets;
@@ -137,16 +140,17 @@ public abstract class listUI {
     /**
      * Kiválaszt a megadott vonal összes járműje közül 1-et.
      * @param line A megadott vonal, ahol a járműt keresi
+     * @param displayFreeSeat ha {@code true}, kiírja a szabad székek számát is.
      * @return a kiválasztott jármű, vagy {@code null}, ha nem sikerült kiválasztani
      */
-    public static Vehicle selectVehicle(Line line){
+    public static Vehicle selectVehicle(Line line, boolean displayFreeSeat){
         if(line.getVehicles().size() == 0){
-            System.out.println("Nincs 1 vonat se ezen a vonalon.");
+            System.out.println("Nincs 1 jármű se ezen a vonalon.");
             standardUIMessage.ok();
             return null;
         }
-        ArrayList<Vehicle> vehicles = listVehicles(line, true);
-        System.out.print("Vonat sorszáma: ");
+        ArrayList<Vehicle> vehicles = listVehicles(line, true, displayFreeSeat);
+        System.out.print("Jármű sorszáma: ");
         int selectedTrain = Main.getInt()-1;
         if(selectedTrain < 0 || selectedTrain >= vehicles.size()) return null;
         return vehicles.get(selectedTrain);

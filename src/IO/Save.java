@@ -11,6 +11,7 @@ public abstract class Save {
     public static final String STATIONS_FILE = "stations";
     public static final String LINES_FILE = "lines";
     public static final String PASSENGERS_FILE = "passengers";
+    public static final String TICKETS_FILE = "tickets";
 
     public static void save(String filename, Collection collection){
         try{

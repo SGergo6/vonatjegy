@@ -75,6 +75,15 @@ public class Timetable {
         return arrival;
     }
 
+    public Station searchStation(String name){
+        for(Station s : line.getRoute()){
+            if(s.getName().toLowerCase().contains(name)){
+                return s;
+            }
+        }
+        return null;
+    }
+
     public int Size(){
         return arrival.length;
     }

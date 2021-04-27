@@ -53,6 +53,7 @@ public class Main {
         passengers = Load.loadPassengers();
         StationManager.setStations(Load.loadStations());
         LineManager.setLines(Load.loadLines());
+        TicketManager.setTickets(Load.loadTickets());
     }
 
     /**

@@ -111,8 +111,8 @@ public class Ticket implements Serializable, Comparable<Ticket> {
         //s80 from 11:30 -> to 12:30, 1-5 ülés. 230ft
         Timetable table = line.getTimetable(vehicle);
 
-        return this.line.getName() + "\t" + from.getName() + "\t\t" + table.getStationArrival(from)
-                + " -> " + to.getName() + "\t\t" + table.getStationArrival(to) + seat.getSeatNumber() + " ülés.\t"
+        return this.line.getName() + "\t" + from.getName() + " " + table.getStationArrival(from)
+                + " -> " + to.getName() + " " + table.getStationArrival(to) + ". " + seat.getSeatNumber() + " ülés.\t"
                 + price + "Ft";
     }
 

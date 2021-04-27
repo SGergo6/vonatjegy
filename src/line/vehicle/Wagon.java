@@ -18,7 +18,7 @@ public class Wagon implements Serializable {
 
         //Tömb inicializálása
         for (int i = 0; i < seatCount; i++) {
-            seats[i] = new Seat(wagonNumber + "-" + i+1);
+            seats[i] = new Seat(wagonNumber + "-" + (i+1));
         }
 
         this.wagonNumber = wagonNumber;
@@ -32,15 +32,43 @@ public class Wagon implements Serializable {
     }
 
     /**
-     * Megadja a kocsi összes székének foglaltsági állapotát
+     * @return a kocsiba lévő szabad székek számát
+     */
+    public int getFreeSeatCount(){
+        int sum = 0;
+        for (Seat s : seats){
+            if(s.getStatus() == Seat.FREE) sum++;
+        }
+        return sum;
+    }
+
+    /**
+     * @param connectRequest legalább ennyi szék legyen egymás mellett szabadon
+     * @return a kocsiba lévő összefüggő szabad székek számát.
+     */
+    public int getConnectedFreeSeatCount(int connectRequest){
+        int sum = 0;
+        int connectCounter = 0;
+
+        for (Seat seat : seats) {
+            if (seat.getStatus() == Seat.FREE) {
+                connectCounter++;
+                if (connectCounter >= connectRequest) {
+                    sum++;
+                }
+            } else {
+                connectCounter = 0;
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * Megadja a megadott szék foglaltsági állapotát
      * @return A szék foglaltsági állapota
      */
-    public boolean[] getSeatStatus(){
-        boolean[] status = new boolean[getSeatCount()];
-        for (int i = 0; i < seats.length; i++) {
-            status[i] = seats[i].getStatus();
-        }
-        return status;
+    public boolean getSeatStatus(int i){
+        return seats[i].getStatus();
     }
 
     /**
@@ -63,5 +91,13 @@ public class Wagon implements Serializable {
 
     public Seat getSeat(int seatI) {
         return seats[seatI];
+    }
+    public int getWagonNumber() {
+        return wagonNumber;
+    }
+
+    @Override
+    public String toString() {
+        return wagonNumber + ". kocsi, " + getFreeSeatCount() + " szabad ülés.";
     }
 }

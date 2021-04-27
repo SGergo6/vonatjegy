@@ -1,7 +1,9 @@
 package line.vehicle;
 
-public class Train extends Vehicle{
-    private final Wagon[] wagons;
+import java.io.Serializable;
+
+public class Train extends Vehicle implements Serializable {
+    private Wagon[] wagons;
 
     public Train(int wagonCount){
         super();
@@ -38,7 +40,7 @@ public class Train extends Vehicle{
      * @param seatCount a kocsiban lévő ülések száma.
      */
     public void setWagon(int index, int seatCount){
-        wagons[index] = new Wagon(seatCount, index);
+        wagons[index] = new Wagon(seatCount, index+1);
     }
 
     /**
@@ -60,4 +62,30 @@ public class Train extends Vehicle{
         return wagons[wagonI].getSeat(seatI);
     }
 
+    @Override
+    public int getTotalFreeSeatCount() {
+        int sum = 0;
+        for (Wagon w : wagons){
+            sum += w.getFreeSeatCount();
+        }
+        return sum;
+    }
+
+    @Override
+    public int getTotalSeatCount() {
+        int sum = 0;
+        for (Wagon w : wagons){
+            sum += w.getSeatCount();
+        }
+        return sum;
+    }
+
+    @Override
+    public int getTotalConnectedFreeSeatCount(int connectRequest) {
+        int sum = 0;
+        for (Wagon w : wagons){
+            sum += w.getConnectedFreeSeatCount(connectRequest);
+        }
+        return sum;
+    }
 }

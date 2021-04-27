@@ -37,7 +37,7 @@ public abstract class TicketManager {
         if(!tickets.add(ticket)){
             return false;
         }
-        ticket.getSeat().reserve();
+        if(!ticket.getSeat().reserve()) return false;
         ticket.getPassenger().purchase(ticket);
         return true;
     }
@@ -98,5 +98,9 @@ public abstract class TicketManager {
      */
     public static void setManualSeatFee(int manualSeatFee) {
         TicketManager.manualSeatFee = manualSeatFee;
+    }
+
+    public static void setTickets(HashSet<Ticket> tickets) {
+        TicketManager.tickets = tickets;
     }
 }

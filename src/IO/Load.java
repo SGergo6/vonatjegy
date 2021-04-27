@@ -4,6 +4,7 @@ import UI.standardUIMessage;
 import line.Line;
 import station.Station;
 import ticket.Passenger;
+import ticket.Ticket;
 
 import java.io.*;
 import java.util.Collection;
@@ -104,6 +105,33 @@ public abstract class Load {
             return new HashSet<>();
         } catch (IOException | ClassNotFoundException e) {
             throwLoadFailed(e, Save.PASSENGERS_FILE);
+            return null;
+        }
+    }
+
+    public static HashSet<Ticket> loadTickets(){
+        try {
+            FileInputStream f = new FileInputStream(Save.TICKETS_FILE);
+            ObjectInputStream in = new ObjectInputStream(f);
+            HashSet<Ticket> tickets = new HashSet<>();
+
+            try {
+                while (true) {
+                    Ticket t = (Ticket) in.readObject();
+                    if (t != null) {
+                        tickets.add(t);
+                    } else {
+                        break;
+                    }
+                }
+            } catch (EOFException ignored) {}
+
+            return tickets;
+        } catch (FileNotFoundException e) {
+            return new HashSet<>();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            throwLoadFailed(e, Save.TICKETS_FILE);
             return null;
         }
     }

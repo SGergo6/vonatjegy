@@ -116,7 +116,7 @@ public abstract class maintenanceUI {
                             linesToList.removeIf(l -> l.getVehicles().size() == 0);
                             selectedLine = listUI.selectLine(linesToList);
                             if(selectedLine == null) break;
-                            listUI.listVehicles(selectedLine, false);
+                            listUI.listVehicles(selectedLine, false, true);
                             standardUIMessage.ok();
                             break;
 
@@ -132,7 +132,7 @@ public abstract class maintenanceUI {
                             linesToList.removeIf(l -> l.getVehicles().size() == 0);
                             selectedLine = listUI.selectLine(linesToList);
                             if(selectedLine == null) break;
-                            Vehicle selectedVehicle = listUI.selectVehicle(selectedLine);
+                            Vehicle selectedVehicle = listUI.selectVehicle(selectedLine, true);
                             if(selectedVehicle == null) break;
                             System.out.println(selectedLine.getTimetable(selectedVehicle));
                             standardUIMessage.ok();
@@ -148,7 +148,7 @@ public abstract class maintenanceUI {
                     linesToList.removeIf(l -> l.getVehicles().size() == 0);
                     selectedLine = listUI.selectLine(linesToList);
                     if(selectedLine == null) break;
-                    Vehicle selectedVehicle = listUI.selectVehicle(selectedLine);
+                    Vehicle selectedVehicle = listUI.selectVehicle(selectedLine, false);
                     if(selectedVehicle == null) break;
                     System.out.print("Hozzáadandó vagy eltávolítandó késés: ");
                     int delay = Main.getInt();
