@@ -1,6 +1,5 @@
 package line.vehicle;
 
-import line.LineManager;
 import line.Timetable;
 import time.Time;
 import time.TimeException;
@@ -163,6 +162,13 @@ public abstract class Vehicle implements Serializable {
      * @return az összefüggő szabad székek számát
      */
     public abstract int getTotalConnectedFreeSeatCount(int connectRequest);
+
+    /**
+     * Megkeres egy széket a neve alapján.
+     * @param name a szék neve
+     * @return a megtalált szék osztálya
+     */
+    public abstract Seat getSeat(String name);
 
 
     /**

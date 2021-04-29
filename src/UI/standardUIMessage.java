@@ -22,7 +22,6 @@ public abstract class standardUIMessage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //Main.input.next();
     }
 
     /**

@@ -1,12 +1,11 @@
 package ticket;
 
 import line.Line;
+import line.LineManager;
 import line.Timetable;
 import line.vehicle.Vehicle;
-import line.vehicle.Wagon;
 import station.Station;
 import line.vehicle.Seat;
-import line.vehicle.Train;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -19,6 +18,10 @@ public class Ticket implements Serializable, Comparable<Ticket> {
     private Seat seat;
     private int price;
     private Passenger passenger;
+
+    /*private int lineHash;
+    private int vehicleHash;
+    private String seatName;*/
 
     /**
      * Létrehoz egy jegy osztályt.
@@ -47,6 +50,9 @@ public class Ticket implements Serializable, Comparable<Ticket> {
             price += TicketManager.getManualSeatFee();
         }
 
+        /*this.lineHash = line.hashCode();
+        this.vehicleHash = vehicle.hashCode();
+        this.seatName = seat.getSeatNumber();*/
     }
 
     /**
@@ -120,4 +126,27 @@ public class Ticket implements Serializable, Comparable<Ticket> {
     public int compareTo(Ticket t) {
         return Integer.compare(this.getPrice(), t.getPrice());
     }
+
+
+    /**
+     * Visszatöltés után visszaállítja a referenciákat a
+     * managerekbe megegyezőkre.
+     */
+    /*public void fixReferences(){
+        for (Line line : LineManager.getLines()) {
+            if (line.hashCode() == this.lineHash) {
+                this.line = line;
+                break;
+            }
+        }
+
+        for (Vehicle vehicle : this.line.getVehicles()){
+            if(vehicle.hashCode() == this.vehicleHash){
+                this.vehicle = vehicle;
+            }
+        }
+
+        this.seat = this.vehicle.getSeat(this.seatName);
+    }*/
+
 }

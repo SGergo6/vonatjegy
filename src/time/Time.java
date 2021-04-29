@@ -1,6 +1,7 @@
 package time;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Time implements Comparable<Time>, Serializable {
     /** 0 órától eltelt percek száma. */
@@ -16,14 +17,15 @@ public class Time implements Comparable<Time>, Serializable {
     }
 
      /** Létrehoz egy idő osztályt, az óra:percet stringként megadva. */
-    public Time(String time){
+    public Time(String time) {
         String[] timeSpl = time.split(":");
+        if (timeSpl.length < 2) throw new IllegalArgumentException("A megadott idő nem értelmezhető!");
         this.min = Integer.parseInt(timeSpl[1]);
-        if(min>=60){
+        if (min >= 60) {
             throw new IllegalArgumentException("A perc túllépte a maximális 60 percet!");
         }
         this.min += 60 * Integer.parseInt(timeSpl[0]);
-        if(this.min >= 1440){
+        if (this.min >= 1440) {
             throw new IllegalArgumentException("A megadott idő több, mint 23:59!");
         }
     }
@@ -143,5 +145,10 @@ public class Time implements Comparable<Time>, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Time time = (Time) o;
         return this.min == time.min;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(min);
     }
 }

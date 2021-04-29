@@ -41,21 +41,13 @@ public class Line implements Serializable{
         train.setTimetable(direction, timetable);
         vehicles.add(train);
     }
-    /**
-     * Hozzáad egy új vonatot a vonalhoz.
-     * @param t hozzáadandó vonat
-     * @return {@code true}, ha sikerült hozzáadni, {@code false}, ha nem sikerült.
-     */
-    public boolean newTrain(Train t){
-        return vehicles.add(t);
-    }
 
     /**
      * Hozzáad egy új járművet a vonalhoz.
      * @param vehicle valamilyen jármű osztály leszármazott.
      */
-    public void newVehicle(Vehicle vehicle){
-        vehicles.add(vehicle);
+    public boolean newVehicle(Vehicle vehicle){
+        return vehicles.add(vehicle);
     }
 
     /**
@@ -86,7 +78,7 @@ public class Line implements Serializable{
             }
         }
 
-        return (Vehicle[]) found.toArray();
+        return found.toArray(new Vehicle[0]);
     }
 
 
@@ -114,7 +106,7 @@ public class Line implements Serializable{
         return price;
     }
     public HashSet<Vehicle> getVehicles() {
-        return new HashSet<>(Collections.unmodifiableCollection(vehicles));
+        return new HashSet<>(vehicles);
     }
     public Station getDeparture(){
         return route[0];

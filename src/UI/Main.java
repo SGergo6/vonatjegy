@@ -2,22 +2,31 @@ package UI;
 
 import IO.Load;
 import IO.Save;
+import line.Line;
 import station.Station;
 import station.StationManager;
 import ticket.Passenger;
+import ticket.Ticket;
 import ticket.TicketManager;
 import line.LineManager;
 
 import java.util.HashSet;
 import java.util.InputMismatchException;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Main {
     public static Scanner input;
+    public static Properties properties;
     private static HashSet<Passenger> passengers;
+    private static boolean initialized;
 
     public static void main(String[] args) {
-        initializeProgram();
+        if(!initialized) {
+            properties = Load.loadProperties();
+            initializeProgram();
+            initialized = true;
+        }
 
 
 
@@ -35,7 +44,6 @@ public class Main {
         }
 
         input.close();
-        IO.input.close();
 
 
     }
@@ -44,16 +52,15 @@ public class Main {
      * Inicializálja az összes inicializálandó osztályt.
      */
     public static void initializeProgram() {
-        IO.input.initialize(System.in);
         StationManager.initialize();
         TicketManager.initialize();
         LineManager.initialize();
         input = new Scanner(System.in);
+        passengers = new HashSet<>();
 
-        passengers = Load.loadPassengers();
-        StationManager.setStations(Load.loadStations());
-        LineManager.setLines(Load.loadLines());
-        TicketManager.setTickets(Load.loadTickets());
+        Load.loadAll();
+
+        TicketManager.setManualSeatFee(Integer.parseInt(properties.getProperty("MANUAL_SEAT_FEE", "0")));
     }
 
     /**
@@ -69,6 +76,11 @@ public class Main {
             }
         }
     }
-
+    public static void setPassengers(HashSet<Passenger> passengers) {
+        if (passengers != null) Main.passengers = passengers;
+    }
+    public static HashSet<Passenger> getPassengers() {
+        return passengers;
+    }
 
 }

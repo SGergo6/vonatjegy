@@ -11,6 +11,7 @@ import line.vehicle.Train;
 import line.vehicle.Vehicle;
 import station.Station;
 import station.StationManager;
+import ticket.TicketManager;
 import time.Time;
 
 import java.util.*;
@@ -22,15 +23,17 @@ public abstract class maintenanceUI {
     private static final int NEW_STATION = 3;
     private static final int LIST = 4;
     private static final int MANAGE_DELAY = 5;
+    private static final int MANUAL_SEAT_FEE = 6;
 
     /** Karbantartó mód opciói */
-    public static final String[] MENU_MAINTENANCE_MAIN = new String[]{
+    private static final String[] MENU_MAINTENANCE_MAIN = new String[]{
             "Kilépés",
             "Új vonal hozzáadása",
             "Vonat hozzáadása",
             "Állomás hozzáadása",
             "Listázás",
-            "Késés kezelése"
+            "Késés kezelése",
+            "Kézi ülésválasztás ár beállítása"
     };
 
     public static void start(){
@@ -49,7 +52,7 @@ public abstract class maintenanceUI {
                             System.out.println("A vonal hozzáadása sikertelen, ilyen nevű vonal már létezik.");
                             standardUIMessage.ok();
                         } else {
-                            Save.save(Save.LINES_FILE, LineManager.getLines());
+                            Save.save();
                         }
                     }
                     break;
@@ -59,9 +62,9 @@ public abstract class maintenanceUI {
                     if(selectedLine == null) break;
                     Train addTrain = newTrain(selectedLine);
                     if(addTrain != null){
-                        if(selectedLine.newTrain(addTrain)){
+                        if(selectedLine.newVehicle(addTrain)){
                             System.out.println("Vonat sikeresen hozzáadva.");
-                            Save.save(Save.LINES_FILE, LineManager.getLines());
+                            Save.save();
                         } else {
                             System.out.println("A vonat hozzáadása sikertelen.");
                             standardUIMessage.ok();
@@ -74,7 +77,7 @@ public abstract class maintenanceUI {
                     if(newStation != null) {
                         if (StationManager.newStation(newStation)) {
                             System.out.println(newStation + " sikeresen hozzáadva.");
-                            Save.save(Save.STATIONS_FILE, StationManager.getStations());
+                            Save.save();
                         } else {
                             System.out.println(newStation + " hozzáadása nem sikerült: már létezik állomás ilyen néven.");
                             standardUIMessage.ok();
@@ -161,6 +164,14 @@ public abstract class maintenanceUI {
 
                 case EXIT:
                     exit = true;
+                    break;
+                case MANUAL_SEAT_FEE:
+                    System.out.print("Manuális hely választás új ára: ");
+                    int price = Main.getInt();
+                    TicketManager.setManualSeatFee(price);
+                    Main.properties.setProperty("MANUAL_SEAT_FEE", String.valueOf(price));
+                    Save.saveProperties(Main.properties);
+                    standardUIMessage.ok();
                     break;
             }
         }

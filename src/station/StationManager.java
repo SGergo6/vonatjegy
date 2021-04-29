@@ -87,6 +87,7 @@ public abstract class StationManager {
     }
 
     public static void setStations(HashSet<Station> stations) {
-        StationManager.stations = stations;
+        if (stations != null) StationManager.stations = stations;
+
     }
 }

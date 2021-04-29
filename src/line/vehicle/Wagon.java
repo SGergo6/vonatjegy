@@ -96,6 +96,14 @@ public class Wagon implements Serializable {
         return wagonNumber;
     }
 
+    public Seat searchSeat(String name){
+        for (Seat s : seats){
+            if(s.getSeatNumber().equalsIgnoreCase(name))
+                return s;
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return wagonNumber + ". kocsi, " + getFreeSeatCount() + " szabad ülés.";

@@ -1,10 +1,14 @@
 package IO;
 
+import UI.Main;
 import UI.standardUIMessage;
 import line.Line;
+import line.LineManager;
 import station.Station;
+import station.StationManager;
 import ticket.Passenger;
 import ticket.Ticket;
+import ticket.TicketManager;
 
 import java.io.*;
 import java.util.Collection;
@@ -30,109 +34,21 @@ public abstract class Load {
         throw new LoadFailed(throwable);
     }
 
-    public static HashSet<Station> loadStations(){
+    /**
+     * Betölti az összes adatot a <i>vonatjegy.save</i> fájlból a megfelelő managerekbe.
+     */
+    public static void loadAll(){
         try {
-            FileInputStream f = new FileInputStream(Save.STATIONS_FILE);
+            FileInputStream f = new FileInputStream("vonatjegy.save");
             ObjectInputStream in = new ObjectInputStream(f);
-            HashSet<Station> stations = new HashSet<>();
 
-            try {
-                while (true) {
-                    Station s = (Station) in.readObject();
-                    if (s != null) {
-                        stations.add(s);
-                    } else {
-                        break;
-                    }
-                }
-            } catch (EOFException ignored) {}
-
-            return stations;
-        } catch (FileNotFoundException e) {
-            return new HashSet<>();
+            StationManager.setStations((HashSet<Station>) in.readObject());
+            LineManager.setLines((HashSet<Line>) in.readObject());
+            Main.setPassengers((HashSet<Passenger>) in.readObject());
+            TicketManager.setTickets((HashSet<Ticket>) in.readObject());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            throwLoadFailed(e, Save.STATIONS_FILE);
-            return null;
-        }
-    }
-
-    public static HashSet<Line> loadLines(){
-        try {
-            FileInputStream f = new FileInputStream(Save.LINES_FILE);
-            ObjectInputStream in = new ObjectInputStream(f);
-            HashSet<Line> lines = new HashSet<>();
-
-            try {
-                while (true) {
-                    Line l = (Line) in.readObject();
-                    if (l != null) {
-                        lines.add(l);
-                    } else {
-                        break;
-                    }
-                }
-            } catch (EOFException ignored) {}
-
-            return lines;
-        } catch (FileNotFoundException e) {
-            return new HashSet<>();
-        } catch (IOException | ClassNotFoundException e) {
-            throwLoadFailed(e, Save.LINES_FILE);
-            return null;
-        }
-    }
-
-    public static HashSet<Passenger> loadPassengers(){
-        try{
-            FileInputStream f = new FileInputStream(Save.PASSENGERS_FILE);
-            ObjectInputStream in = new ObjectInputStream(f);
-            HashSet<Passenger> passengers = new HashSet<>();
-
-            try {
-                while (true) {
-                    Passenger p = (Passenger) in.readObject();
-                    if (p != null) {
-                        passengers.add(p);
-                    } else {
-                        break;
-                    }
-                }
-            } catch (EOFException ignored) {}
-
-            return passengers;
-        } catch (FileNotFoundException e) {
-            return new HashSet<>();
-        } catch (IOException | ClassNotFoundException e) {
-            throwLoadFailed(e, Save.PASSENGERS_FILE);
-            return null;
-        }
-    }
-
-    public static HashSet<Ticket> loadTickets(){
-        try {
-            FileInputStream f = new FileInputStream(Save.TICKETS_FILE);
-            ObjectInputStream in = new ObjectInputStream(f);
-            HashSet<Ticket> tickets = new HashSet<>();
-
-            try {
-                while (true) {
-                    Ticket t = (Ticket) in.readObject();
-                    if (t != null) {
-                        tickets.add(t);
-                    } else {
-                        break;
-                    }
-                }
-            } catch (EOFException ignored) {}
-
-            return tickets;
-        } catch (FileNotFoundException e) {
-            return new HashSet<>();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throwLoadFailed(e, Save.TICKETS_FILE);
-            return null;
+            throwLoadFailed(e, "vonatjegy.save");
         }
     }
 

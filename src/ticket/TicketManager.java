@@ -101,6 +101,6 @@ public abstract class TicketManager {
     }
 
     public static void setTickets(HashSet<Ticket> tickets) {
-        TicketManager.tickets = tickets;
+        if (tickets != null) TicketManager.tickets = tickets;
     }
 }

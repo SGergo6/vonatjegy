@@ -51,6 +51,7 @@ public abstract class userUI {
                     HashSet<Line> notEmptyLines = LineManager.getLines();
                     notEmptyLines.removeIf(l -> l.getVehicles().size() == 0);
                     if(!purchaseTicket(notEmptyLines)) System.out.println("A vásárlás nem sikerült.");
+                    Save.save();
                     break;
 
                 case LIST_TICKET:
@@ -63,8 +64,11 @@ public abstract class userUI {
                     if(selectTicket == null) break;
                     System.out.println("Biztosan szeretnéd ezt a jegyet visszatéríteni?\n" + selectTicket);
                     if(!standardUIMessage.yesNo()) break;
-                    TicketManager.refund(selectTicket);
-                    System.out.println("A kiválasztott jegy sikeresen visszafizetve.");
+                    if(TicketManager.refund(selectTicket))
+                        System.out.println("A kiválasztott jegy sikeresen visszafizetve.");
+                    else
+                        System.out.println("Nem sikerült a visszatérítés.");
+                    Save.save();
                     standardUIMessage.ok();
                     break;
 
@@ -77,7 +81,7 @@ public abstract class userUI {
                     int selected = -1;
                     try{
                         selected = Integer.parseInt(Main.input.next())-1;
-                    } catch (NumberFormatException ignored) { break; }
+                    } catch (NumberFormatException e) { break; }
                     if(selected < 0 || selected > sortVehicles.size()) break;
                     System.out.println(selectedLine.getTimetable(sortVehicles.get(selected)));
                     standardUIMessage.ok();
@@ -112,7 +116,7 @@ public abstract class userUI {
         if(standardUIMessage.yesNo()){
             Passenger registered = new Passenger(name);
             passengerList.add(registered);
-            Save.save(Save.PASSENGERS_FILE, passengerList);
+            Save.save();
             return registered;
         }
         return null;
@@ -190,8 +194,7 @@ public abstract class userUI {
                     if(!TicketManager.purchase(t))
                         System.out.println("A vásárlás nem sikerült. Ez a személy már ül ezen a vonaton.");
 
-                    Save.save(Save.TICKETS_FILE, TicketManager.getTickets());
-                    Save.save(Save.LINES_FILE, LineManager.getLines());
+                    Save.save();
                     pplCount--;
                     if(pplCount > 0) {
                         System.out.println("Kinek szól a következő jegy?");
@@ -252,8 +255,7 @@ public abstract class userUI {
                             return false;
                         }
 
-                        Save.save(Save.TICKETS_FILE, TicketManager.getTickets());
-                        Save.save(Save.LINES_FILE, LineManager.getLines());
+                        Save.save();
                         System.out.println("Sikeres vásárlás.");
                         standardUIMessage.ok();
                         pplCount--;

@@ -37,12 +37,20 @@ public class TimetableTest {
                 new Time(10, 20)
         };
 
-        assertNull(t1.getStationArrival(StationManager.searchStation("újpest")));
-        assertEquals(t1.getStationArrival(new Station("keleti")), expectedTimes[0]);
-        assertEquals(t1.getStationArrival(new Station("nyugati")), expectedTimes[1]);
-        assertEquals(t1.getStationArrival(new Station("déli")), expectedTimes[2]);
+        assertFalse(t1.addTime(StationManager.searchStation("újpest"), new Time(10,30)),
+                "Hozzáadás rossz állomáshoz");
+        assertNull(t1.getStationArrival(StationManager.searchStation("újpest")),
+                "Rossz állomás idő lekérdezése");
+        assertEquals(expectedTimes[0], t1.getStationArrival(new Station("keleti")), "Keleti idő lekérdezés");
+        assertEquals(expectedTimes[1], t1.getStationArrival(new Station("nyugati")), "Nyugati idő lekérdezés");
+        assertEquals(expectedTimes[2], t1.getStationArrival(new Station("déli")), "Déli idő lekérdezés");
+
 
         assertArrayEquals(t1.getArrivals(), expectedTimes);
+
+        assertNull(t1.searchStation("Mucsaröcsöge"), "Keresés nem létezőre");
+        assertNull(t1.searchStation("újpest"), "Keresés nem vonalon lévőre");
+        assertEquals(StationManager.searchStation("déli"), t1.searchStation("dél"), "Keresés vonalon lévőre");
     }
 
     @Test
@@ -54,6 +62,7 @@ public class TimetableTest {
         line_s70.newTrain(1, 10, Timetable.DIRECTION_NORMAL, t1);
 
         assertEquals(t1, line_s70.getTimetable(line_s70.findVehicle(new Time(10,0))));
+        assertEquals(line_s70, t1.getLine());
 
 
     }

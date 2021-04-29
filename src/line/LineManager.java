@@ -7,15 +7,9 @@ import java.util.HashSet;
 
 public abstract class LineManager {
     private static HashSet<Line> lines;
-    private static int nextID;
 
     public static void initialize(){
         lines = new HashSet<>();
-        nextID = 0;
-    }
-
-    public static int nextID(){
-        return nextID++;
     }
 
     /**
@@ -81,6 +75,6 @@ public abstract class LineManager {
     }
 
     public static void setLines(HashSet<Line> lines) {
-        LineManager.lines = lines;
+        if (lines != null) LineManager.lines = lines;
     }
 }

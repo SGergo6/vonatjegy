@@ -62,6 +62,22 @@ public class Train extends Vehicle implements Serializable {
         return wagons[wagonI].getSeat(seatI);
     }
 
+    /**
+     * Megkeres egy széket a neve alapján.
+     *
+     * @param name a szék neve
+     * @return a megtalált szék osztálya
+     */
+    @Override
+    public Seat getSeat(String name) {
+        for (Wagon w : wagons){
+            Seat s = w.searchSeat(name);
+            if (s != null) return s;
+        }
+        return null;
+    }
+
+
     @Override
     public int getTotalFreeSeatCount() {
         int sum = 0;
