@@ -4,6 +4,7 @@ import line.Line;
 
 import java.util.Comparator;
 
+/** Betűrend alapján hasonlít össze vonalakat. */
 public class LineNameComparator implements Comparator<Line> {
 
 

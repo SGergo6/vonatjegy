@@ -2,13 +2,17 @@ package line.vehicle;
 
 import java.io.Serializable;
 
+/** Egy ülést tárol el egy járműben. */
 public class Seat implements Serializable {
+    /** foglalt-e a szék vagy sem */
     private boolean reserved;
+    /** szék azonosítója (egy járműben egyedinek kell lennie) */
     private final String seatNumber;
 
     public static final boolean RESERVED = true;
     public static final boolean FREE = false;
 
+    /** Létrehoz egy új széket a megadott néven */
     Seat(String seatNumber){
         reserved = FREE;
         this.seatNumber = seatNumber;

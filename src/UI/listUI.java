@@ -156,6 +156,11 @@ public abstract class listUI {
         return vehicles.get(selectedTrain);
     }
 
+    /**
+     * Kér a felhasználótól az összes állomás közül 1-et.
+     * @param stations A választható állomások
+     * @return a kiválasztott állomás, vagy {@code null}, ha nem sikerült kiválasztani
+     */
     public static Station selectStation(Collection<Station> stations){
         if(stations.size() == 0){
             System.out.println("Nincs 1 kiválasztható állomás se.");
@@ -163,12 +168,17 @@ public abstract class listUI {
             return null;
         }
         ArrayList<Station> orderedStations = listStations(stations, true, true);
-        System.out.print("Vonal sorszáma: ");
+        System.out.print("Állomás sorszáma: ");
         int selectedStation = Main.getInt()-1;
         if(selectedStation < 0 || selectedStation >= orderedStations.size()) return null;
         return orderedStations.get(selectedStation);
     }
 
+    /**
+     * Kiválaszt a megadott jegyek közül 1-et.
+     * @param tickets Választható jegyek
+     * @return a kiválasztott jegy, vagy {@code null}, ha nem sikerült kiválasztani
+     */
     public static Ticket selectTicket(Collection<Ticket> tickets){
         if(tickets.size() == 0){
             System.out.println("Nincs 1 kiválasztható jegy se.");

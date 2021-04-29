@@ -12,11 +12,13 @@ import java.util.*;
  * <b>Az osztályt használat előtt inicializálni kell.</b>
  */
 public abstract class TicketManager {
+    /** Az összes létező, megvásárolt jegy tárolója */
     private static HashSet<Ticket> tickets;
+    /** Kézi helyválasztás ára */
     private static int manualSeatFee;
 
     /**
-     * Inicializálja az osztályt.
+     * Inicializálja az osztályt alapértelmezett értékekkel.
      */
     public static void initialize(){
         tickets = new HashSet<>();
@@ -28,7 +30,8 @@ public abstract class TicketManager {
      * Egy utas egy vonatra csak 1x vásárolhat jegyet.
      * @param ticket a megvásárolni kívánt jegy
      * @return {@code false}, ha ez az utas ugyanerre a vonatra és helyre már vett jegyet,
-     * vagy a szék már foglalt volt.<br>{@code true}, ha sikeres volt.
+     * vagy a szék már foglalt volt.<br>
+     * {@code true}, ha sikeres volt.
      */
     public static boolean purchase(Ticket ticket) {
         if(ticket.getSeat().getStatus() == Seat.RESERVED){
@@ -81,7 +84,7 @@ public abstract class TicketManager {
 
 
     /**
-     * @return az összes jegyet tartalmazó {@code HashSet}-et.
+     * @return az összes jegyet tartalmazó {@code HashSet} másolatával.
      */
     public static HashSet<Ticket> getTickets() {
         return new HashSet<>(tickets);
@@ -100,6 +103,9 @@ public abstract class TicketManager {
         TicketManager.manualSeatFee = manualSeatFee;
     }
 
+    /**
+     * Beállítja a ticket listát a megadott értékre, kivéve, ha az null.
+     */
     public static void setTickets(HashSet<Ticket> tickets) {
         if (tickets != null) TicketManager.tickets = tickets;
     }

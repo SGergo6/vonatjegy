@@ -8,11 +8,16 @@ import time.Time;
 import java.io.Serializable;
 import java.util.*;
 
+/** Egy vonal információit és vonatait tárolja el. */
 public class Line implements Serializable{
+    /** Vonal útvonala sorrendben */
     private final Station[] route;
+    /** Vonal neve */
     private final String name;
+    /** Vonal megállónkénti ára */
     private int price;
-    private HashSet<Vehicle> vehicles;
+    /** Vonalon közlekedő járművek */
+    private final HashSet<Vehicle> vehicles;
 
 
     /**
@@ -51,9 +56,9 @@ public class Line implements Serializable{
     }
 
     /**
-     * Megkeres egy vonatot az indulási ideje alapján
-     * @param departure indulási idő a vonat 1. állomásáról
-     * @return a megtalált vonat osztálya, vagy {@code null}
+     * Megkeres egy járművet az indulási ideje alapján
+     * @param departure indulási idő a jármű 1. állomásáról
+     * @return a megtalált jármű osztálya, vagy {@code null}
      */
     public Vehicle findVehicle(Time departure) {
         for(Vehicle vehicle : vehicles){
@@ -65,8 +70,8 @@ public class Line implements Serializable{
     }
 
     /**
-     * Megkeres egy vonatot egy időtartományban az indulási ideje alapján
-     * @param departure indulási idő a vonat 1. állomásáról
+     * Megkeres egy járművet egy időtartományban az indulási ideje alapján
+     * @param departure indulási idő a jármű 1. állomásáról
      * @param interval időtartomány (+/-), percben megadva
      * @return a megtalált vonatok osztályai tömbbe
      */
@@ -89,13 +94,12 @@ public class Line implements Serializable{
      */
     public Timetable getTimetable(Vehicle vehicle){
         if(vehicle.getStationArrivals().length != route.length){
-            throw new IllegalArgumentException("Ez a vonat nem ezen a vonalon közlekedik!");
+            return null;
         }
-        Timetable t = new Timetable(this);
-        t.setArrival(vehicle.getStationArrivals());
-        return t;
+        return new Timetable(this, vehicle.getStationArrivals());
     }
 
+    /** @return az útvonal másolatát */
     public Station[] getRoute() {
         return route.clone();
     }
@@ -105,15 +109,19 @@ public class Line implements Serializable{
     public int getPrice() {
         return price;
     }
+    /** @return a vonalon lévő vonatok másolatát */
     public HashSet<Vehicle> getVehicles() {
         return new HashSet<>(vehicles);
     }
+    /** Indulási állomás */
     public Station getDeparture(){
         return route[0];
     }
+    /** Érkezési állomás */
     public Station getArrival(){
         return route[route.length-1];
     }
+    /** Átírja a megállónkénti árat az új értékre. */
     public void updatePrice(int price) {
         this.price = price;
     }
@@ -121,8 +129,8 @@ public class Line implements Serializable{
     /**
      * Visszaadja egy állomás sorszámát az útvonalból.
      * @param station a keresendő állomás
-     * @return az állomás sorszáma, {@code null}, ha az állomás
-     * nem szerepel az útvonalon.
+     * @return az állomás sorszáma,<br>
+     * {@code null}, ha az állomás nem szerepel az útvonalon.
      */
     public Integer getRouteStationIndex(Station station) {
         for (int i = 0; i < route.length; i++) {
@@ -140,7 +148,7 @@ public class Line implements Serializable{
      * A vonal állomásainak irányát a jármű osztály határozza meg a {@code lineReversed} változóban.
      * (Honnan hova tart)
      * @param o Összehasonlítandó objektum
-     * @return {@code true} ha megegyezik a 2 vonal <b>neve</b>
+     * @return {@code true} ha megegyezik a 2 vonal neve
      */
     @Override
     public boolean equals(Object o) {

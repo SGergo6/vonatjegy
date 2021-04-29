@@ -9,16 +9,20 @@ import line.vehicle.Train;
 import line.vehicle.Vehicle;
 import line.vehicle.Wagon;
 import station.Station;
+import station.StationManager;
 import ticket.Passenger;
 import ticket.Ticket;
 import ticket.TicketManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
+/**
+ * Felhasználói (vásárlói) móddal kapcsolatos felület.
+ */
 public abstract class userUI {
     private static HashSet<Passenger> passengerList;
+    /** Jelenleg belépett felhasználó */
     private static Passenger loggedInUser;
 
     private static final int EXIT = 0;
@@ -26,6 +30,7 @@ public abstract class userUI {
     private static final int LIST_TICKET = 2;
     private static final int REFUND_TICKET = 3;
     private static final int SEARCH_TRAIN = 4;
+    private static final int SEARCH_STATION_LINE = 5;
 
     /** Vásárlás mód opciói */
     public static final String[] MENU_BUY_MAIN = new String[]{
@@ -33,9 +38,14 @@ public abstract class userUI {
             "Jegy vásárlása",
             "Jegyek listázása",
             "Jegy visszatérítése",
-            "Vonatok keresése"
+            "Vonatok keresése",
+            "Állomást érintő vonatok keresése"
     };
 
+    /**
+     * Elindítja a felhasználói mód felületét.
+     * @param passengers az összes beléptethető felhasználó listája
+     */
     public static void start(HashSet<Passenger> passengers) {
         boolean exit = false;
         passengerList = passengers;
@@ -44,7 +54,7 @@ public abstract class userUI {
 
 
         while (!exit) {
-            int option = standardUIMessage.printMenu(MENU_BUY_MAIN);
+            int option = standardUIMessage.selectMenu(MENU_BUY_MAIN);
             switch (option) {
 
                 case PURCHASE_TICKET:
@@ -78,13 +88,32 @@ public abstract class userUI {
                     ArrayList<Vehicle> sortVehicles = listUI.listVehicles(selectedLine, true, true);
 
                     System.out.print("Vonat sorszáma a menetrendhez: ");
-                    int selected = -1;
+                    int selected;
                     try{
                         selected = Integer.parseInt(Main.input.next())-1;
                     } catch (NumberFormatException e) { break; }
                     if(selected < 0 || selected > sortVehicles.size()) break;
                     System.out.println(selectedLine.getTimetable(sortVehicles.get(selected)));
                     standardUIMessage.ok();
+                    break;
+
+                case SEARCH_STATION_LINE:
+                    listUI.listStations(StationManager.getStations(), false, true);
+                    System.out.print("Állomás neve: ");
+                    Station searchStation = StationManager.searchStation(Main.input.next());
+                    if (searchStation == null) break;
+
+                    Line[] foundLines = LineManager.searchLines(searchStation);
+                    if (foundLines.length == 0) {
+                        System.out.println("Ezen az állomáson 1 vonat se áll meg.");
+                        break;
+                    }
+                    System.out.println(searchStation.getName() + " állomást a következő vonalak érintik:");
+                    for (Line l : foundLines){
+                        System.out.println(l.getName());
+                    }
+                    standardUIMessage.ok();
+
                     break;
 
                 case EXIT: //Kilépés
@@ -97,17 +126,16 @@ public abstract class userUI {
 
 
     /**
-     * Bejelentkeztet egy felhasználót
-     * @return a belépett felhasználó
+     * Bejelentkeztet vagy regisztráltat egy felhasználót
+     * @return a belépett felhasználó<br>
+     * ha nem lépett be senki, {@code null}
      */
     private static Passenger login(){
         System.out.print("Felhasználónév: ");
         String name = Main.input.next();
         if (name.equals("") || name.equals("0")) return null;
-        Iterator<Passenger> it = passengerList.iterator();
-        while(it.hasNext()){
-            Passenger passenger = it.next();
-            if(passenger.getName().equalsIgnoreCase(name)){
+        for (Passenger passenger : passengerList) {
+            if (passenger.getName().equalsIgnoreCase(name)) {
                 return passenger;
             }
         }
@@ -123,6 +151,13 @@ public abstract class userUI {
     }
 
 
+    /**
+     * A jegyvásárlás 1. része: a vásárló itt választja ki a vonatot,
+     * induló és cél állomást, valamint hogy hány utasnak vesz jegyet.
+     * @param lines kiírandó vonalak
+     * @return {@code true}, ha sikeresen hozzáadta a jegyet a TicketManagerhez<br>
+     * {@code false}, ha a vásárlás nem sikerült
+     */
     public static boolean purchaseTicket(HashSet<Line> lines){
         //Vonal és vonat választás
         Line selectedLine = listUI.selectLine(lines);
@@ -180,6 +215,18 @@ public abstract class userUI {
         }
     }
 
+    /**
+     * Automatikus jegyvásárló rendszer.<br>
+     * Megveszi a kiválasztott vonatra a jegyet, a helyet automatikusan jelöli ki.
+     *
+     * @param from felszálló állomás
+     * @param to leszálló állomás
+     * @param line vonal
+     * @param train vonat
+     * @param pplCount hány főnek vegyen jegyet
+     * @return {@code true}, ha sikeresen hozzáadta a jegyet a TicketManagerhez<br>
+     * {@code false}, ha a vásárlás nem sikerült
+     */
     public static boolean autoBuy(Station from, Station to, Line line, Train train, int pplCount) {
         if (train.getTotalFreeSeatCount() < pplCount) return false;
 
@@ -198,7 +245,9 @@ public abstract class userUI {
                     pplCount--;
                     if(pplCount > 0) {
                         System.out.println("Kinek szól a következő jegy?");
-                        passenger = login();
+                        do {
+                            passenger = login();
+                        } while (passenger == null);
                     } else return true;
                 }
             }
@@ -208,6 +257,19 @@ public abstract class userUI {
         return false;
     }
 
+    /**
+     * Manuális jegyvásárló rendszer.<br>
+     * Ebben a módban a felhasználó maga választja ki, hova kéri a
+     * helyjegyeket a vonaton, a még szabad székeken.
+     *
+     * @param from felszálló állomás
+     * @param to leszálló állomás
+     * @param line vonal
+     * @param train vonat
+     * @param pplCount hány főnek vegyen jegyet
+     * @return {@code true}, ha sikeresen hozzáadta a jegyet a TicketManagerhez<br>
+     * {@code false}, ha a vásárlás nem sikerült
+     */
     public static boolean manualBuy(Station from, Station to, Line line, Train train, int pplCount) {
         Passenger passenger = loggedInUser;
 
@@ -261,7 +323,9 @@ public abstract class userUI {
                         pplCount--;
                         if(pplCount > 0) {
                             System.out.println("Kinek szól a következő jegy?");
-                            passenger = login();
+                            do {
+                                passenger = login();
+                            } while (passenger == null);
                         } else return true;
                     }
                 }

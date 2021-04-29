@@ -1,34 +1,30 @@
 package station;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.Objects;
 
-/**
- * Eltárol egy állomást.
- */
+/** Állomás tárolására használható osztály. */
 public class Station implements Comparable<Station>, Serializable {
+    /** Állomás neve */
     private String name;
-    /** Az állomás egyéni azonosító száma */
-    private final transient int stationID;
 
     /**
-     * Inicializálja az állomást.
+     * Létrehoz egy új állomást.
      * @param name az állomás neve
      */
     public Station(String name) {
         this.name = name;
-        stationID = StationManager.nextStationID();
     }
 
+    /**
+     * Átállítja az állomás nevét.
+     * @param name új név
+     */
     public void setName(String name) {
         this.name = name;
     }
-    public int getStationID() {
-        return stationID;
-    }
 
+    /** @return Állomás neve */
     public String getName() {
         return name;
     }
@@ -50,6 +46,7 @@ public class Station implements Comparable<Station>, Serializable {
         return Objects.hash(name.toLowerCase());
     }
 
+    /** Betűrend alapján összehasonlítja a 2 állomás nevét. */
     @Override
     public int compareTo(Station o) {
         return this.getName().compareTo(o.getName());

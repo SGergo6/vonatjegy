@@ -4,6 +4,7 @@ import line.Line;
 
 import java.util.Comparator;
 
+/** Összehasonlít vonalakat a járműveik száma alapján. */
 public class LineVehicleCountComparator implements Comparator<Line> {
 
     @Override

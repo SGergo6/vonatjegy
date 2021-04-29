@@ -4,6 +4,7 @@ import line.Line;
 
 import java.util.Comparator;
 
+/** Összehasonlít vonalakat az áruk alapján. */
 public class PriceComparator implements Comparator<Line> {
 
     @Override

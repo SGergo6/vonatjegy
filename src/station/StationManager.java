@@ -1,6 +1,5 @@
 package station;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -11,25 +10,14 @@ import java.util.Iterator;
  * <b>Az osztályt használat előtt inicializálni kell.</b>
  */
 public abstract class StationManager {
-    private static int nextStationID;
+    /** Összes létrehozott állomás tárolója*/
     private static HashSet<Station> stations;
 
     /**
-     * Inicializálja az osztályt.
+     * Inicializálja az osztályt alapértelmezett értékekkel.
      */
     public static void initialize(){
-        nextStationID = 0;
         stations = new HashSet<>();
-    }
-
-    /**
-     * Megadja a következő egyedi állomás azonosító számot.
-     * @return az állomás egyedi azonosító száma.
-     */
-    static int nextStationID(){
-        int returnID = nextStationID;
-        nextStationID++;
-        return returnID;
     }
 
 
@@ -60,9 +48,7 @@ public abstract class StationManager {
         return stations.add(station);
     }
 
-    /**
-     * @return a teljes állomás tároló {@code HashSet}-et.
-     */
+    /** @return az állomásokat tároló {@code HashSet} másolatával. */
     public static HashSet<Station> getStations() {
         return new HashSet<>(stations);
     }
@@ -70,7 +56,8 @@ public abstract class StationManager {
     /**
      * Megkeres egy állomást név alapján. Nem nagybetű érzékeny.
      * @param stationName a keresendő állomás neve
-     * @return A megtalált állomás osztályát, {@code null}, ha az állomás nem létezik
+     * @return A megtalált állomás osztályát<br>
+     * {@code null}, ha az állomás nem létezik
      */
     public static Station searchStation(String stationName){
         Iterator<Station> i = stations.iterator();
@@ -86,6 +73,7 @@ public abstract class StationManager {
         return null;
     }
 
+    /** Beállítja az állomás listát a megadott listára, kivéve, ha az null. */
     public static void setStations(HashSet<Station> stations) {
         if (stations != null) StationManager.stations = stations;
 

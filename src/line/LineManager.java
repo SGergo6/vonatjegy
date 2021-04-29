@@ -5,9 +5,17 @@ import station.Station;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * Programszintű vonal és vonat menedzselő osztály.<br>
+ * Ez az osztály tárolja el a vonalakat egy {@code HashSet} típusú tárolóban,
+ * duplikáció így nem léphet fel.<br><br>
+ * <b>Az osztályt használat előtt inicializálni kell.</b>
+ */
 public abstract class LineManager {
+    /** Összes létrehozott vonal tárolója */
     private static HashSet<Line> lines;
 
+    /** Inicializálja az osztályt alapértelmezett értékekkel. */
     public static void initialize(){
         lines = new HashSet<>();
     }
@@ -70,10 +78,12 @@ public abstract class LineManager {
 
     }
 
+    /** @return a vonalakat tároló listájának egy másolatával. */
     public static HashSet<Line> getLines() {
         return new HashSet<>(lines);
     }
 
+    /**  Beállítja a vonal listát a megadott értékre, kivéve, ha az null. */
     public static void setLines(HashSet<Line> lines) {
         if (lines != null) LineManager.lines = lines;
     }

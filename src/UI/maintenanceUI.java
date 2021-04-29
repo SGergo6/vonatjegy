@@ -16,6 +16,7 @@ import time.Time;
 
 import java.util.*;
 
+/** Karbantartói móddal kapcsolatos interface */
 public abstract class maintenanceUI {
     private static final int EXIT = 0;
     private static final int NEW_LINE = 1;
@@ -36,12 +37,13 @@ public abstract class maintenanceUI {
             "Kézi ülésválasztás ár beállítása"
     };
 
+    /** Elindítja a karbantartói mód felületét. */
     public static void start(){
 
         boolean exit = false;
 
         while (!exit) {
-            int option = standardUIMessage.printMenu(maintenanceUI.MENU_MAINTENANCE_MAIN);
+            int option = standardUIMessage.selectMenu(maintenanceUI.MENU_MAINTENANCE_MAIN);
 
             switch (option) {
 
@@ -86,7 +88,7 @@ public abstract class maintenanceUI {
                     break;
 
                 case LIST:
-                    switch (standardUIMessage.printMenu(listUI.MENU_LIST_ALL)) {
+                    switch (standardUIMessage.selectMenu(listUI.MENU_LIST_ALL)) {
 
                         case listUI.LINES:
                             System.out.println("Mi szerint rendezze a vonalakat?");
@@ -94,7 +96,7 @@ public abstract class maintenanceUI {
                                     "Vissza", "Név", "Ár", "Vonatok száma"
                             };
                             Comparator<Line> comparator = null;
-                            switch (standardUIMessage.printMenu(options)) {
+                            switch (standardUIMessage.selectMenu(options)) {
                                 case 1 -> //Név
                                         comparator = new LineNameComparator();
                                 case 2 -> //Ár
@@ -178,7 +180,11 @@ public abstract class maintenanceUI {
     }
 
 
-
+    /**
+     * Bekér egy új állomást.
+     * @return bekért állomás osztálya<br>
+     * vagy {@code null}, ha a bekérés nem sikerült.
+     */
     public static Station newStation(){
         System.out.print("Állomás neve: ");
         String stationName = Main.input.next();
@@ -186,6 +192,11 @@ public abstract class maintenanceUI {
         return new Station(stationName);
     }
 
+    /**
+     * Bekér egy új vonalat a felhasználótól.
+     * @return az új vonal osztálya<br>
+     * {@code null}, ha a bekérés nem sikerült
+     */
     public static Line newLine() {
         //route, name, price
         System.out.print("Vonal neve: ");
@@ -247,7 +258,8 @@ public abstract class maintenanceUI {
     /**
      * Bekér a felhasználótól egy új vonatot és az adatait.
      * @param line a vonal amin a vonat közlekedni fog
-     * @return vonat osztály, vagy {@code null}, ha a bekérés nem sikerült
+     * @return vonat osztály<br>
+     * {@code null}, ha a bekérés nem sikerült
      */
     public static Train newTrain(Line line){
         System.out.print("Vonat kocsijainak száma: ");
@@ -263,7 +275,7 @@ public abstract class maintenanceUI {
         System.out.println("Induló állomás: ");
         //Kiírja az első és az utolsó állomás nevét.
         //Ha 0-t választ, akkor egyenesen halad, ha 1-et, akkor visszafelé.
-        boolean reversed = standardUIMessage.printMenu(new String[]{
+        boolean reversed = standardUIMessage.selectMenu(new String[]{
                 line.getRoute()[0].toString(),
                 line.getRoute()[line.getRoute().length - 1].toString()
         }) == 0 ? Timetable.DIRECTION_NORMAL : Timetable.DIRECTION_REVERSED;

@@ -1,23 +1,15 @@
 package IO;
 
 import UI.Main;
-import line.Line;
 import line.LineManager;
-import station.Station;
 import station.StationManager;
-import ticket.Passenger;
-import ticket.Ticket;
 import ticket.TicketManager;
 
 import java.io.*;
 import java.util.*;
 
+/** Adatok mentését megvalósító osztály. */
 public abstract class Save {
-
-    public static final String STATIONS_FILE = "stations";
-    public static final String LINES_FILE = "lines";
-    public static final String PASSENGERS_FILE = "passengers";
-    public static final String TICKETS_FILE = "tickets";
 
     /**
      * Kimenti az összes elmentendő adatot a programból.<br>
@@ -43,6 +35,9 @@ public abstract class Save {
         }
     }
 
+    /**
+     * Kimenti a program globális beállításait.
+     */
     public static void saveProperties(Properties p){
         try {
             FileOutputStream f = new FileOutputStream("global.txt");

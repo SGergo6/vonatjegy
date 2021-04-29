@@ -11,10 +11,10 @@ import ticket.Ticket;
 import ticket.TicketManager;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 
+/** Adatok betöltését végző osztály. */
 public abstract class Load {
 
     /**
@@ -25,9 +25,9 @@ public abstract class Load {
      * tud felépülni rendesen.
      * @param throwable A hiba forrása
      */
-    private static void throwLoadFailed(Throwable throwable, String filename) throws LoadFailed{
+    private static void throwLoadFailed(Throwable throwable) throws LoadFailed{
         System.out.println("Hiba történt a beolvasás során: " + throwable.getMessage());
-        System.out.println("A " + filename + " fájl beolvasása nem sikerült.");
+        System.out.println("A vonatjegy.save fájl beolvasása nem sikerült.");
         System.out.println("A program betöltése nem folytatható. Ha a hiba újraindítást követően " +
                 "is fennáll, akkor törölni kell a mentést, és újra kell konfigurálni a programot.");
         standardUIMessage.ok();
@@ -37,6 +37,7 @@ public abstract class Load {
     /**
      * Betölti az összes adatot a <i>vonatjegy.save</i> fájlból a megfelelő managerekbe.
      */
+    @SuppressWarnings("unchecked")
     public static void loadAll(){
         try {
             FileInputStream f = new FileInputStream("vonatjegy.save");
@@ -46,12 +47,16 @@ public abstract class Load {
             LineManager.setLines((HashSet<Line>) in.readObject());
             Main.setPassengers((HashSet<Passenger>) in.readObject());
             TicketManager.setTickets((HashSet<Ticket>) in.readObject());
+        } catch (FileNotFoundException ignored) {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            throwLoadFailed(e, "vonatjegy.save");
+            throwLoadFailed(e);
         }
     }
 
+    /**
+     * Betölti a globális beállításokat.
+     */
     public static Properties loadProperties(){
         Properties properties = new Properties();
 

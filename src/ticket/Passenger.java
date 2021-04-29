@@ -3,7 +3,9 @@ package ticket;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/** Utast és annak adatait tároló osztály. */
 public class Passenger extends Person implements Serializable {
+    /** Utas egyenlege */
     private int balance;
 
     /**
@@ -31,10 +33,12 @@ public class Passenger extends Person implements Serializable {
         balance += ticket.getPrice();
     }
 
+    /** Megkeresi és visszaadja az összes, utas által birtokolt jegyet. */
     public ArrayList<Ticket> getTickets() {
         return TicketManager.findTickets(this);
     }
 
+    /** @return az utas egyenlegét */
     public int getBalance() {
         return balance;
     }

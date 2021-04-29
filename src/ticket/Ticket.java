@@ -1,7 +1,6 @@
 package ticket;
 
 import line.Line;
-import line.LineManager;
 import line.Timetable;
 import line.vehicle.Vehicle;
 import station.Station;
@@ -10,25 +9,22 @@ import line.vehicle.Seat;
 import java.io.Serializable;
 import java.util.Objects;
 
+/** Jegy tárolására használható osztály. */
 public class Ticket implements Serializable, Comparable<Ticket> {
-    private Line line;
-    private Station from;
-    private Station to;
-    private Vehicle vehicle;
-    private Seat seat;
-    private int price;
-    private Passenger passenger;
-
-    /*private int lineHash;
-    private int vehicleHash;
-    private String seatName;*/
+    private final Line line;
+    private final Station from;
+    private final Station to;
+    private final Vehicle vehicle;
+    private final Seat seat;
+    private final int price;
+    private final Passenger passenger;
 
     /**
      * Létrehoz egy jegy osztályt.
      * @param line vonal, amin a jármű halad
      * @param from felszálló állomás
      * @param to leszálló állomás
-     * @param vehicle vonat, amire a jegy érvényes
+     * @param vehicle jármű, amire a jegy érvényes
      * @param seat lefoglalt szék (helyjegy)
      * @param passenger a vásárló utas
      * @param manualSeat {@code true}, ha a vásárló kézzel választott széket (extra költség merülhet fel).
@@ -44,15 +40,14 @@ public class Ticket implements Serializable, Comparable<Ticket> {
         this.passenger = passenger;
         this.line = line;
 
-        this.price = Math.abs(line.getRouteStationIndex(to) - line.getRouteStationIndex(from)) * line.getPrice();
+        int price = Math.abs(line.getRouteStationIndex(to) - line.getRouteStationIndex(from)) * line.getPrice();
 
         if(manualSeat) {
             price += TicketManager.getManualSeatFee();
         }
 
-        /*this.lineHash = line.hashCode();
-        this.vehicleHash = vehicle.hashCode();
-        this.seatName = seat.getSeatNumber();*/
+        this.price = price;
+
     }
 
     /**
@@ -85,7 +80,7 @@ public class Ticket implements Serializable, Comparable<Ticket> {
         return to;
     }
     /**
-     * @return vonat, amire a jegy érvényes
+     * @return jármű, amire a jegy érvényes
      */
     public Vehicle getVehicle() {
         return vehicle;
@@ -108,13 +103,22 @@ public class Ticket implements Serializable, Comparable<Ticket> {
     public Passenger getPassenger() {
         return passenger;
     }
+
+    /**
+     * @return a vonal amin a jár a jármű
+     */
     public Line getLine() {
         return line;
     }
 
+    /**
+     * Kiírja a jegyet a következő formában:<br>
+     * vonat neve, induló állomás, idő -> érkezési állomás, idő, ülés száma, jegy ára.<br><br>
+     * Példa:<br>
+     * S80 Keleti 11:30 -> Siófok 13:30, 1-5 ülés. 230Ft
+     */
     @Override
     public String toString() {
-        //s80 from 11:30 -> to 12:30, 1-5 ülés. 230ft
         Timetable table = line.getTimetable(vehicle);
 
         return this.line.getName() + "\t" + from.getName() + " " + table.getStationArrival(from)
@@ -122,31 +126,10 @@ public class Ticket implements Serializable, Comparable<Ticket> {
                 + price + "Ft";
     }
 
+    /** Összehasonlít 2 jegyet az áruk alapján. */
     @Override
     public int compareTo(Ticket t) {
         return Integer.compare(this.getPrice(), t.getPrice());
     }
-
-
-    /**
-     * Visszatöltés után visszaállítja a referenciákat a
-     * managerekbe megegyezőkre.
-     */
-    /*public void fixReferences(){
-        for (Line line : LineManager.getLines()) {
-            if (line.hashCode() == this.lineHash) {
-                this.line = line;
-                break;
-            }
-        }
-
-        for (Vehicle vehicle : this.line.getVehicles()){
-            if(vehicle.hashCode() == this.vehicleHash){
-                this.vehicle = vehicle;
-            }
-        }
-
-        this.seat = this.vehicle.getSeat(this.seatName);
-    }*/
 
 }

@@ -127,6 +127,7 @@ public abstract class Vehicle implements Serializable {
     }
 
 
+    /** @return a jármű késése percben */
     public int getDelay() {
         return delay;
     }

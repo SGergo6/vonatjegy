@@ -4,6 +4,7 @@ import line.vehicle.Vehicle;
 
 import java.util.Comparator;
 
+/** Összehasonlít járműveket az indulási idejük alapján. */
 public class VehicleDepartureComparator implements Comparator<Vehicle> {
 
     @Override

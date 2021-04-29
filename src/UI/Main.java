@@ -1,12 +1,8 @@
 package UI;
 
 import IO.Load;
-import IO.Save;
-import line.Line;
-import station.Station;
 import station.StationManager;
 import ticket.Passenger;
-import ticket.Ticket;
 import ticket.TicketManager;
 import line.LineManager;
 
@@ -16,23 +12,22 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class Main {
+    /** A program fő scannere */
     public static Scanner input;
+    /** A program globális beállításai */
     public static Properties properties;
+    /** Program által ismert utasok listája */
     private static HashSet<Passenger> passengers;
-    private static boolean initialized;
 
     public static void main(String[] args) {
-        if(!initialized) {
-            properties = Load.loadProperties();
-            initializeProgram();
-            initialized = true;
-        }
-
+        properties = Load.loadProperties();
+        initializeProgram();
+        input.useDelimiter("\n");
 
 
         boolean exit = false;
         while (!exit) {
-            switch (standardUIMessage.printMenu(standardUIMessage.MENU_SELECT_MODE)) {
+            switch (standardUIMessage.selectMenu(standardUIMessage.MENU_SELECT_MODE)) {
                 case 1 -> //Vásárlás
                         userUI.start(passengers);
                 case 2 -> //Karbantarás
@@ -49,7 +44,8 @@ public class Main {
     }
 
     /**
-     * Inicializálja az összes inicializálandó osztályt.
+     * Inicializálja az program összes fontos inicializálandó osztályát,
+     * mint a managerek, és ezeket értékekkel is feltölti, ha már van egy használható mentés.
      */
     public static void initializeProgram() {
         StationManager.initialize();
@@ -64,7 +60,7 @@ public class Main {
     }
 
     /**
-     * Kér a felhasználótól egy {@code int} értéket, addig próbálkozik, ameddig nem jár sikerrel.
+     * Kér a felhasználótól egy {@code int} értéket. Addig próbálkozik, ameddig nem jár sikerrel.
      * @return a felhasználótól kapott {@code int}.
      */
     public static int getInt() {

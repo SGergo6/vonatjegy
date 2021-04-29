@@ -3,6 +3,7 @@ package time;
 import java.io.Serializable;
 import java.util.Objects;
 
+/** 24 órás intervallumot eltároló osztály. */
 public class Time implements Comparable<Time>, Serializable {
     /** 0 órától eltelt percek száma. */
     private int min;
@@ -14,9 +15,12 @@ public class Time implements Comparable<Time>, Serializable {
         }
         this.min = min;
         this.min += 60 * hour;
+        checkTime(this.min);
     }
 
-     /** Létrehoz egy idő osztályt, az óra:percet stringként megadva. */
+     /** Létrehoz egy idő osztályt.
+      * @param time óra:perc stringként megadva.
+      */
     public Time(String time) {
         String[] timeSpl = time.split(":");
         if (timeSpl.length < 2) throw new IllegalArgumentException("A megadott idő nem értelmezhető!");
@@ -32,6 +36,7 @@ public class Time implements Comparable<Time>, Serializable {
 
     /** Létrehoz egy idő osztályt, amiben a megadott számot adja meg a belső órába. */
     Time(int mins){
+        checkTime(mins);
         this.min = mins;
     }
 
@@ -40,12 +45,12 @@ public class Time implements Comparable<Time>, Serializable {
         this.min = 0;
     }
 
-    /** Visszadja a bent lévő órát */
+    /** Visszadja az eltárolt órát */
     public int getHours(){
         return (int)Math.floor((double)this.min/60);
     }
 
-    /** Visszaadja az óra percét */
+    /** Visszaadja az eltárolt óra percét */
     public int getMins(){
         int retMin = this.min;
         while(retMin >= 60){
@@ -60,40 +65,80 @@ public class Time implements Comparable<Time>, Serializable {
     }
 
 
+    /**
+     * Hozzáad egy másik idő osztályt ehhez az időhöz.
+     * @param t hozzáadandó idő
+     * @return Az idő osztályt, amiben már össze van adva a 2 érték.
+     * @throws TimeException ha az összeadás során 24 óra fölé vagy 0 óra alá ment az idő.
+     */
     public Time add(Time t) throws TimeException{
         return addMins(t.getMinsOnly());
     }
+    /**
+     * Hozzáad ehhez az időhöz megadott számú órát.
+     * @param addH hozzáadandó óra
+     * @return Az idő osztályt, amiben már össze van adva a 2 érték.
+     * @throws TimeException ha az összeadás során 24 óra fölé vagy 0 óra alá ment az idő.
+     */
     public Time addHours(int addH) throws TimeException{
         return addMins(addH*60);
     }
+    /**
+     * Hozzáad megadott mennyiségű percet ehhez az időhöz.
+     * @param addMin hozzáadandó idő
+     * @return Az idő osztályt, amiben már össze van adva a 2 érték.
+     * @throws TimeException ha az összeadás során 24 óra fölé vagy 0 óra alá ment az idő.
+     */
     public Time addMins(int addMin) throws TimeException{
         int retMins = this.min;
         retMins += addMin;
-        if (retMins >= 1440){
-            throw new TimeOverflowException();
-        }
-        if (retMins < 0){
-            throw new TimeUnderflowException();
-        }
+        checkTime(retMins);
         return new Time(retMins);
     }
 
+    /**
+     * Kivon egy másik idő osztályt ebből.
+     * @param t kivonandó idő
+     * @return Az idő osztályt, amiben már ki van vonva a 2 érték.
+     * @throws TimeException ha az kivonás során 24 óra fölé vagy 0 óra alá ment az idő.
+     */
     public Time sub(Time t) throws TimeException{
         return subMins(t.getMinsOnly());
     }
+    /**
+     * Kivon ebből az időből megadott számú órát.
+     * @param subH kivonandó óra száma
+     * @return Az idő osztályt, amiben már ki van vonva a 2 érték.
+     * @throws TimeException ha az kivonás során 24 óra fölé vagy 0 óra alá ment az idő.
+     */
     public Time subHours(int subH) throws TimeException{
         return subMins(subH*60);
     }
+    /**
+     * Kivon ebből az időből megadott számú percet.
+     * @param subMin kivonandó percek
+     * @return Az idő osztályt, amiben már ki van vonva a 2 érték.
+     * @throws TimeException ha az kivonás során 24 óra fölé vagy 0 óra alá ment az idő.
+     */
     public Time subMins(int subMin) throws TimeException{
         int retMins = this.min;
         retMins -= subMin;
-        if (retMins >= 1440){
+        checkTime(retMins);
+        return new Time( retMins);
+    }
+
+    /**
+     * Ellenőrzi, hogy a megadott idő benne van-e a 24 órás időtartományban.
+     * @param minutes ellenőrizendő perc
+     * @throws TimeException ha hibás volt a megadott perc
+     */
+    private void checkTime(int minutes) throws TimeException{
+        if (minutes >= 1440){
             throw new TimeOverflowException();
         }
-        if(retMins < 0){
+        if(minutes < 0){
             throw new TimeUnderflowException();
         }
-        return new Time( retMins);
     }
 
 
@@ -126,7 +171,7 @@ public class Time implements Comparable<Time>, Serializable {
 
     /**
      * Ellenőrzi, hogy ez az idő benne van-e egy megadott időtartományban, vagy sem.
-     * @param t1 az tartomány alsó fele (beleértve) (megcserélhető a 2 érték)
+     * @param t1 az tartomány alsó fele (beleértve) <i>(megcserélhető a 2 érték)</i>
      * @param t2 az tartomány felső fele (beleértve)
      * @return {@code true}, ha benne van a tartományban.
      */

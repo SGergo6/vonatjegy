@@ -2,9 +2,15 @@ package line.vehicle;
 
 import java.io.Serializable;
 
+/** Egy vonatot tárol el. */
 public class Train extends Vehicle implements Serializable {
-    private Wagon[] wagons;
+    /** Vonat kocsijai */
+    private final Wagon[] wagons;
 
+    /**
+     * Létrehoz egy új vonat osztályt.
+     * @param wagonCount Kocsik száma a vonaton
+     */
     public Train(int wagonCount){
         super();
         wagons = new Wagon[wagonCount];

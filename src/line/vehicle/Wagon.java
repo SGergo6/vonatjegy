@@ -3,10 +3,12 @@ package line.vehicle;
 import java.io.Serializable;
 
 /**
- * Eltárolja egy jármű kocsiját, amelyben a székek helyezkednek el.
+ * Eltárolja egy vonat kocsiját, amelyben a székek helyezkednek el.
  */
 public class Wagon implements Serializable {
+    /** Kocsiban lévő székek */
     private final Seat[] seats;
+    /** Kocsi száma */
     private final int wagonNumber;
 
     /**
@@ -65,15 +67,16 @@ public class Wagon implements Serializable {
 
     /**
      * Megadja a megadott szék foglaltsági állapotát
+     * @param seatNumber ülés indexe
      * @return A szék foglaltsági állapota
      */
-    public boolean getSeatStatus(int i){
-        return seats[i].getStatus();
+    public boolean getSeatStatus(int seatNumber){
+        return seats[seatNumber].getStatus();
     }
 
     /**
      * Lefoglalja a megadott széket.
-     * @param seatNumber a lefoglalandó szék
+     * @param seatNumber a lefoglalandó szék indexe
      * @return  {@code false}, ha a szék már foglalt volt a lefoglalás előtt,
      * {@code true}, ha sikeres a foglalás
      */
@@ -89,6 +92,10 @@ public class Wagon implements Serializable {
         seats[seatNumber].free();
     }
 
+    /**
+     * @param seatI a kért szék indexe
+     * @return a megadott indexű szék osztályát
+     */
     public Seat getSeat(int seatI) {
         return seats[seatI];
     }
@@ -96,6 +103,11 @@ public class Wagon implements Serializable {
         return wagonNumber;
     }
 
+    /**
+     * Megkeres egy széket az azonosítója alapján.
+     * @param name szék azonosítója
+     * @return megtalált szék osztálya
+     */
     public Seat searchSeat(String name){
         for (Seat s : seats){
             if(s.getSeatNumber().equalsIgnoreCase(name))
